@@ -1,6 +1,10 @@
 package model.world;
 
 import java.util.ArrayList;
+
+import model.abilities.Ability;
+import model.effects.Effect;
+
 import java.awt.Point;
 
 public class Champion {
@@ -14,11 +18,15 @@ public class Champion {
 	private int attackRange;
 	private int attackDamage;
 	private int speed;
-	//private ArrayList<Ability> abilities;
-	//private ArrayList<Effect> appliedEffects;
+	private ArrayList<Ability> abilities;
+	private ArrayList<Effect> appliedEffects;
 	private Condition condition;
 	private Point location;
 	
+	
+
+	
+
 	public Champion(String name, int maxHP, int mana, int maxActions, int speed, int attackRange, int attackDamage)
 	{
 		this.name = name;
@@ -96,6 +104,13 @@ public class Champion {
 
 	public int getAttackRange() {
 		return attackRange;
+	}
+	public ArrayList<Ability> getAbilities() {
+		return abilities;
+	}
+	
+	public ArrayList<Effect> getAppliedEffects() {
+		return appliedEffects;
 	}
 	
 }

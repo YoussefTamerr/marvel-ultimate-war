@@ -23,7 +23,7 @@ private String getName() {
 	return name;
 }
 
-private int getManacost() {
+private int getManaCost() {
 	return manaCost;
 }
 
