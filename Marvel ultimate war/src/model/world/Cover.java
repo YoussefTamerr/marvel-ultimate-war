@@ -27,10 +27,5 @@ public class Cover {
 	public Point getLocation() {
 		return location;
 	}
-	public static void main(String[] args) {
-		Cover c = new Cover(7,9);
-		Point l = c.getLocation();
-		double k = l.getX();
-		System.out.println(k);
-	}
+	
 }
