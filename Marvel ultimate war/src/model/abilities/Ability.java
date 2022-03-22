@@ -2,7 +2,7 @@ package model.abilities;
 
 public class Ability {
 private String name;
-private int manacost;
+private int manaCost;
 private int baseCooldown;
 private int currentCooldown;
 private int castRange;
@@ -11,7 +11,7 @@ AreaOfEffect castArea;
 
 public Ability(String name,int cost, int baseCoolDown, int castRange, AreaOfEffect area ,
 		int required) {
-	this.manacost=cost;
+	this.manaCost=cost;
 	this.baseCooldown=baseCoolDown;
 	this.castRange=castRange;
 	this.castArea=area;
@@ -24,7 +24,7 @@ private String getName() {
 }
 
 private int getManacost() {
-	return manacost;
+	return manaCost;
 }
 
 private int getBaseCooldown() {
