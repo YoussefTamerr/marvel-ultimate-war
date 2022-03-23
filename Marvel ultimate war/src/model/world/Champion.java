@@ -25,7 +25,10 @@ public class Champion {
 	
 	
 
-	
+	public Champion()
+	{
+		
+	}
 
 	public Champion(String name, int maxHP, int mana, int maxActions, int speed, int attackRange, int attackDamage)
 	{
