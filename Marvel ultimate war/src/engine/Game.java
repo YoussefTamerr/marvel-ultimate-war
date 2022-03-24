@@ -5,6 +5,12 @@ import java.io.FileReader;
 import java.util.ArrayList;
 
 import model.abilities.Ability;
+import model.abilities.AreaOfEffect;
+import model.abilities.CrowdControlAbility;
+import model.abilities.DamagingAbility;
+import model.abilities.HealingAbility;
+import model.effects.Effect;
+import model.effects.EffectType;
 import model.world.Champion;
 import model.world.Cover;
 
@@ -35,18 +41,17 @@ public class Game {
 	private void placeCovers() {
 		
 		Cover[] cArr = new Cover[5];
-		
-		for(int i = 0; i<5; i++)
-		{
-			int x = (int)Math.random()*4;
-			int y = (int)Math.random()*4;
-		while((board[x][y] != null) || (x== 4 && y==4) || (x== 0 && y==0) || (x== 4 && y==0) || (x== 0 && y==4))
-		{
-			 x = (int)Math.random()*4;
-				 y = (int)Math.random()*4;
-				 
+
+		for (int i = 0; i < 5; i++) {
+			int x = (int) Math.random() * 4;
+			int y = (int) Math.random() * 4;
+			while ((board[x][y] != null) || (x == 4 && y == 4) || (x == 0 && y == 0) || (x == 4 && y == 0)
+					|| (x == 0 && y == 4)) {
+				x = (int) Math.random() * 4;
+				y = (int) Math.random() * 4;
+
 			}
-			Cover c = new Cover(x,y);
+			Cover c = new Cover(x, y);
 			cArr[i] = c;
 			board[x][y] = c;
 
@@ -54,34 +59,31 @@ public class Game {
 	}
 
 
-	private void placeChampions() {
-		Champion o1 = new Champion();
-		Champion o2 = new Champion();
-		Champion o3 = new Champion();
+	private void placeChampions() { 
 		
-		Champion v1 = new Champion();
-		Champion v2 = new Champion();
-		Champion v3 = new Champion();
 		
-		board[0][1] = o1;
-		board[0][2] = o2;
-		board[0][3] = o3;
+		board[0][1] = firstPlayer.getTeam().get(0);
+		board[0][2] = firstPlayer.getTeam().get(1);
+		board[0][3] = firstPlayer.getTeam().get(2);
 		
-		board[4][1] = v1;
-		board[4][2] = v2;
-		board[4][3] = v3;
+		board[4][1] = secondPlayer.getTeam().get(0);
+		board[4][2] = secondPlayer.getTeam().get(1);
+		board[4][3] = secondPlayer.getTeam().get(2);
 		
 		
 	}
 	
-	public static void loadAbilities(String filePath) throws Exception {
+	public static void loadAbilities(String filePath) throws Exception { 
+		
 		
 		BufferedReader br= new BufferedReader(new FileReader(filePath));
 		String line = "";
 		while((line = br.readLine()) != null)
 		{
-			//availableAbilities = line.split(",");
-			//availableAbilities.add((Ability)line.split(","));
+			String[] values = line.split(",");
+			Ability ab = createAbility(values);
+			availableAbilities.add(ab);
+			
 		}
 		
 	}
@@ -89,6 +91,41 @@ public class Game {
 	public static void loadChampions(String filePath) throws Exception
 	{
 		BufferedReader br= new BufferedReader(new FileReader(filePath));
+		String line = "";
+		while((line = br.readLine()) != null)
+		{
+			String[] values = line.split(",");
+			Champion ch = createChampion(values);
+			availableChampions.add(ch);
+			
+		}
+		
+	}
+	
+	public static Champion createChampion(String[] s)
+	{
+		
+	}
+	
+	public static Ability createAbility(String[] s)
+	{
+		
+		// shoof 7al lel effectType////////////////////////////////////////////////////
+		Ability a = null;
+		switch (s[0]) {
+		case "CC" :
+			Effect e = new Effect(s[7], Integer.parseInt(s[8]), EffectType.valueOf(null) );
+			a = new CrowdControlAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[4]), Integer.parseInt(s[3]), AreaOfEffect.valueOf(s[5]) ,Integer.parseInt(s[6]), e);
+			break;
+		case "DMG" :
+			a = new DamagingAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[4]), Integer.parseInt(s[3]), AreaOfEffect.valueOf(s[5]) ,Integer.parseInt(s[6]), Integer.parseInt(s[7]) );
+			break;
+		case "HEL" :
+			a = new HealingAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[4]), Integer.parseInt(s[3]), AreaOfEffect.valueOf(s[5]) ,Integer.parseInt(s[6]), Integer.parseInt(s[7]) ); 
+			break;
+		}
+		return a;
+
 	}
 
 

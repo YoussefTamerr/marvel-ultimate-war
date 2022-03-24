@@ -65,6 +65,14 @@ public class Champion {
 		this.attackDamage = attackDamage;
 	}
 
+	public void setMana(int mana) {
+		this.mana = mana;
+	}
+
+	public void setCurrentActionPoints(int currentActionPoints) {
+		this.currentActionPoints = currentActionPoints;
+	}
+
 	public int getSpeed() {
 		return speed;
 	}

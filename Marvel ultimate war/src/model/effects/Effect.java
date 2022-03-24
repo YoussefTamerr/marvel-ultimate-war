@@ -5,7 +5,7 @@ public class Effect {
 	private int duration;
 	private EffectType type;
 	public Effect() {
-		// TODO Auto-generated constructor stub
+		
 	}
 	public String getName() {
 		return name;
@@ -19,7 +19,7 @@ public class Effect {
 	public void setDuration(int duration) {
 		this.duration = duration;
 	}
-	Effect(String name, int duration, EffectType type){
+	public Effect(String name, int duration, EffectType type){
 		this.name=name;
 		this.duration=duration;
 		this.type=type;

@@ -1,56 +1,54 @@
 package model.abilities;
 
 public class Ability {
-private String name;
-private int manaCost;
-private int baseCooldown;
-private int currentCooldown;
-private int castRange;
-private int requiredActionPoints;
-AreaOfEffect castArea;
+	private String name;
+	private int manaCost;
+	private int baseCooldown;
+	private int currentCooldown;
+	private int castRange;
+	private int requiredActionPoints;
+	AreaOfEffect castArea;
 
-public Ability(String name,int cost, int baseCoolDown, int castRange, AreaOfEffect area ,
-		int required) {
-	this.manaCost=cost;
-	this.baseCooldown=baseCoolDown;
-	this.castRange=castRange;
-	this.castArea=area;
-	this.requiredActionPoints=required;
+	public Ability(String name, int cost, int baseCoolDown, int castRange, AreaOfEffect area, int required) {
+		this.name = name;
+		this.manaCost = cost;
+		this.baseCooldown = baseCoolDown;
+		this.castRange = castRange;
+		this.castArea = area;
+		this.requiredActionPoints = required;
 
-}
+	}
 
-private String getName() {
-	return name;
-}
+	private String getName() {
+		return name;
+	}
 
-private int getManaCost() {
-	return manaCost;
-}
+	private int getManaCost() {
+		return manaCost;
+	}
 
-private int getBaseCooldown() {
-	return baseCooldown;
-}
+	private int getBaseCooldown() {
+		return baseCooldown;
+	}
 
-public int getCurrentCooldown() {
-	return currentCooldown;
-}
+	public int getCurrentCooldown() {
+		return currentCooldown;
+	}
 
-public void setCurrentCooldown(int currentCooldown) {
-	this.currentCooldown = currentCooldown;
-}
+	public void setCurrentCooldown(int currentCooldown) {
+		this.currentCooldown = currentCooldown;
+	}
 
-private int getCastRange() {
-	return castRange;
-}
+	private int getCastRange() {
+		return castRange;
+	}
 
-private int getRequiredActionPoints() {
-	return requiredActionPoints;
-}
+	private int getRequiredActionPoints() {
+		return requiredActionPoints;
+	}
 
-AreaOfEffect getCastArea() {
-	return castArea;
-}
-
-
+	AreaOfEffect getCastArea() {
+		return castArea;
+	}
 
 }
