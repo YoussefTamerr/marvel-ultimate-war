@@ -11,8 +11,11 @@ import model.abilities.DamagingAbility;
 import model.abilities.HealingAbility;
 import model.effects.Effect;
 import model.effects.EffectType;
+import model.world.AntiHero;
 import model.world.Champion;
 import model.world.Cover;
+import model.world.Hero;
+import model.world.Villain;
 
 public class Game {
 	
@@ -104,24 +107,87 @@ public class Game {
 	
 	public static Champion createChampion(String[] s)
 	{
-		
+		Champion c = null;
+		switch(s[0]) {
+		case "H" :
+			c = new Hero(s[1], Integer.parseInt(s[2]), Integer.parseInt(s[3]), Integer.parseInt(s[4]), Integer.parseInt(s[5]), Integer.parseInt(s[6]), Integer.parseInt(s[7]));
+			break;
+		case "A" :
+			c = new AntiHero(s[1], Integer.parseInt(s[2]), Integer.parseInt(s[3]), Integer.parseInt(s[4]), Integer.parseInt(s[5]), Integer.parseInt(s[6]), Integer.parseInt(s[7]));
+			break;
+		case "V" :
+			c = new Villain(s[1], Integer.parseInt(s[2]), Integer.parseInt(s[3]), Integer.parseInt(s[4]), Integer.parseInt(s[5]), Integer.parseInt(s[6]), Integer.parseInt(s[7]));
+			break;
+		}
+		return c;
 	}
 	
 	public static Ability createAbility(String[] s)
 	{
 		
-		// shoof 7al lel effectType////////////////////////////////////////////////////
+		EffectType et =null;
+		switch(s[7]) {
+		case "Disarm" :
+			et = EffectType.DEBUFF;
+			break;
+		case "PowerUp" :
+			et = EffectType.BUFF;
+			break;
+		case "Shield" :
+			et = EffectType.BUFF;
+			break;
+		case "Silence" :
+			et = EffectType.DEBUFF;
+			break;
+		case "SpeedUp" :
+			et = EffectType.BUFF;
+			break;
+		case "Embrace" :
+			et = EffectType.BUFF;
+			break;
+		case "Root" :
+			et = EffectType.DEBUFF;
+			break;
+		case "Shock" :
+			et = EffectType.DEBUFF;
+			break;
+		case "Dodge" :
+			et = EffectType.BUFF;
+			break;
+		case "Stun" :
+			et = EffectType.DEBUFF;
+			break;
+		}
+		AreaOfEffect aoe = null;
+		switch(s[5]) {
+		case "SELFTARGET" :
+			aoe = AreaOfEffect.SELFTARGET;
+			break;
+		case "SINGLETARGET" :
+			aoe = AreaOfEffect.SINGLETARGET;
+			break;
+		case "TEAMTARGET" :
+			aoe = AreaOfEffect.TEAMTARGET;
+			break;
+		case "DIRECTIONAL" :
+			aoe = AreaOfEffect.DIRECTIONAL;
+			break;
+		case "SURROUND" :
+			aoe = AreaOfEffect.SURROUND;
+			break;
+		
+		}
 		Ability a = null;
 		switch (s[0]) {
 		case "CC" :
-			Effect e = new Effect(s[7], Integer.parseInt(s[8]), EffectType.valueOf(null) );
-			a = new CrowdControlAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[4]), Integer.parseInt(s[3]), AreaOfEffect.valueOf(s[5]) ,Integer.parseInt(s[6]), e);
+			Effect e = new Effect(s[7], Integer.parseInt(s[8]), et );
+			a = new CrowdControlAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[4]), Integer.parseInt(s[3]), aoe ,Integer.parseInt(s[6]), e);
 			break;
 		case "DMG" :
-			a = new DamagingAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[4]), Integer.parseInt(s[3]), AreaOfEffect.valueOf(s[5]) ,Integer.parseInt(s[6]), Integer.parseInt(s[7]) );
+			a = new DamagingAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[4]), Integer.parseInt(s[3]), aoe ,Integer.parseInt(s[6]), Integer.parseInt(s[7]) );
 			break;
 		case "HEL" :
-			a = new HealingAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[4]), Integer.parseInt(s[3]), AreaOfEffect.valueOf(s[5]) ,Integer.parseInt(s[6]), Integer.parseInt(s[7]) ); 
+			a = new HealingAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[4]), Integer.parseInt(s[3]), aoe ,Integer.parseInt(s[6]), Integer.parseInt(s[7]) ); 
 			break;
 		}
 		return a;
