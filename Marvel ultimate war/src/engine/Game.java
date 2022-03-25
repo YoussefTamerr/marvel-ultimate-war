@@ -30,13 +30,25 @@ public class Game {
 	private static int BOARDHEIGHT;
 	private static int BOARDWIDTH;
 	
-	public Game (Player first, Player second)
+	public Game (Player firstPlayer, Player secondPlayer) throws Exception
 	{
-		firstPlayer = first;
-		secondPlayer = second;
+		this.firstPlayer = firstPlayer;
+		this.secondPlayer = secondPlayer;
 		board = new Object[5][5];
+		firstLeaderAbilityUsed=false;
+		secondLeaderAbilityUsed=false;
+		availableChampions =new ArrayList<Champion>() ;
+		availableAbilities =new ArrayList<Ability>() ;
+		PriorityQueue turnOrder=new PriorityQueue(15);
+		int BOARDHEIGHT=5;
+		int BOARDWIDTH=5;
 		placeChampions();
 		placeCovers();
+		String filepath="/Marvel ultimate war/Abilities.csv";
+		loadAbilities(filepath);
+		String filepathc="/Marvel ultimate war/Champions.csv";
+		loadChampions(filepathc);
+		
 	}
 	
 	
@@ -107,6 +119,7 @@ public class Game {
 	
 	public static Champion createChampion(String[] s)
 	{
+
 		Champion c = null;
 		switch(s[0]) {
 		case "H" :
