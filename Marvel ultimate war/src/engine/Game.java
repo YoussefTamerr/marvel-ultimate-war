@@ -106,7 +106,7 @@ public class Game {
 		
 	}
 	
-	public static void loadChampions(String filePath) throws Exception
+	public static void loadChampions(String filePath) throws Exception//esm el ability hador el ability fa el avaialaibe abilities loop 3ala el availaible 3 abilities 
 	{
 		BufferedReader br= new BufferedReader(new FileReader(filePath));
 		String line = "";
@@ -115,7 +115,6 @@ public class Game {
 			String[] values = line.split(",");
 			Champion ch = createChampion(values);
 			availableChampions.add(ch);
-			
 		}
 		
 	}
@@ -134,6 +133,14 @@ public class Game {
 		case "V" :
 			c = new Villain(s[1], Integer.parseInt(s[2]), Integer.parseInt(s[3]), Integer.parseInt(s[4]), Integer.parseInt(s[5]), Integer.parseInt(s[6]), Integer.parseInt(s[7]));
 			break;
+		}
+		String ability1=s[8];
+		String ability2=s[9];
+		String ability3=s[10];
+		for(int f =0; f< availableAbilities.size();f++) {
+		Ability ability=availableAbilities.get(f);
+		if(ability.getName().equals(ability1)||ability.getName().equals(ability2)||ability.getName().equals(ability3))
+			c.getAbilities().add(ability);
 		}
 		return c;
 	}
@@ -210,8 +217,8 @@ public class Game {
 
 	}
 
-
-
+	
+	
 	public Player getFirstPlayer() {
 		return firstPlayer;
 	}

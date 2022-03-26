@@ -19,15 +19,15 @@ public class Ability {
 
 	}
 
-	private String getName() {
+	public String getName() {
 		return name;
 	}
 
-	private int getManaCost() {
+	public int getManaCost() {
 		return manaCost;
 	}
 
-	private int getBaseCooldown() {
+	public int getBaseCooldown() {
 		return baseCooldown;
 	}
 
@@ -39,11 +39,11 @@ public class Ability {
 		this.currentCooldown = currentCooldown;
 	}
 
-	private int getCastRange() {
+	public int getCastRange() {
 		return castRange;
 	}
 
-	private int getRequiredActionPoints() {
+	public int getRequiredActionPoints() {
 		return requiredActionPoints;
 	}
 
