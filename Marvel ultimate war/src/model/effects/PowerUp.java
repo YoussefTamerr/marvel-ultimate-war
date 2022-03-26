@@ -2,8 +2,8 @@ package model.effects;
 
 public class PowerUp extends Effect{
 
-	public PowerUp() {
-		// TODO Auto-generated constructor stub
+	public PowerUp(int duration) {
+		super("PowerUp",duration,EffectType.BUFF);
 	}
 
 }

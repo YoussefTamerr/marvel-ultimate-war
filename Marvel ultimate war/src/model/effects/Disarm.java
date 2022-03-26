@@ -2,8 +2,8 @@ package model.effects;
 
 public class Disarm extends Effect{
 
-	public Disarm() {
-		// TODO Auto-generated constructor stub
+	public Disarm(int duration) {
+		super("Disarm",duration,EffectType.DEBUFF);
 	}
 
 }
