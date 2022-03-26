@@ -9,11 +9,11 @@ public class HealingAbility extends Ability {
 		this.setHealAmount(healAmount);
 	}
 
-	private int getHealAmount() {
+	public int getHealAmount() {
 		return healAmount;
 	}
 
-	private void setHealAmount(int healAmount) {
+	public void setHealAmount(int healAmount) {
 		this.healAmount = healAmount;
 	}
 }

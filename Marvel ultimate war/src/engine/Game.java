@@ -1,5 +1,6 @@
 package engine;
 
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -27,8 +28,8 @@ public class Game {
 	private static ArrayList<Champion> availableChampions;
 	private static ArrayList<Ability> availableAbilities;
 	private PriorityQueue turnOrder;
-	private static int BOARDHEIGHT;
-	private static int BOARDWIDTH;
+	private final static int BOARDHEIGHT = 5;
+	private final static int BOARDWIDTH = 5;
 	public Game () {
 		
 	}
@@ -42,9 +43,8 @@ public class Game {
 		secondLeaderAbilityUsed=false;
 		availableChampions =new ArrayList<Champion>() ;
 		availableAbilities =new ArrayList<Ability>() ;
-		PriorityQueue turnOrder=new PriorityQueue(15);
-		//int BOARDHEIGHT=5;
-		//int BOARDWIDTH=5;
+		PriorityQueue turnOrder=new PriorityQueue(6);
+		
 		placeChampions();
 		placeCovers();
 		String filepath="/Marvel ultimate war/Abilities.csv";
@@ -77,16 +77,29 @@ public class Game {
 	}
 
 
-	private void placeChampions() { 
+	private void placeChampions() { //////////////////////////////////////////////////
 		
+		Champion ch1 = firstPlayer.getTeam().get(0);
+		Champion ch2 = firstPlayer.getTeam().get(1);
+		Champion ch3 = firstPlayer.getTeam().get(2);
 		
-		board[1][0] = firstPlayer.getTeam().get(0);
-		board[2][0] = firstPlayer.getTeam().get(1);
-		board[3][0] = firstPlayer.getTeam().get(2);
+		board[0][1] = ch1;
+		//ch1.setLocation(new Point(1,0));
+		board[0][2] = ch2;
+		//ch2.setLocation(new Point(2,0));
+		board[0][3] = ch3;
+		//ch3.setLocation(new Point(3,0));
 		
-		board[1][4] = secondPlayer.getTeam().get(0);
-		board[2][4] = secondPlayer.getTeam().get(1);
-		board[3][4] = secondPlayer.getTeam().get(2);
+		Champion v1 = secondPlayer.getTeam().get(0);
+		Champion v2 = secondPlayer.getTeam().get(1);
+		Champion v3 = secondPlayer.getTeam().get(2);
+		
+		board[4][1] = v1;
+		//v1.setLocation(new Point(1,4));
+		board[4][2] = v2;
+		//v2.setLocation(new Point(2,4));
+		board[4][3] = v3;
+		//v3.setLocation(new Point(3,4));
 		
 		
 	}
