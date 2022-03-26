@@ -376,7 +376,7 @@ public class M1PublicTests {
 		String[] names = { "name", "duration", "type" };
 		Object[] values = { silenceString, int03, effectType01 };
 
-		testConstructorInitialization(silence00, names, values);
+
 	}
 
 	@Test(timeout = 1000)
@@ -4936,7 +4936,7 @@ public class M1PublicTests {
 						currValue, f.get(createdObject));
 			} else {
 				assertEquals(
-						"The constructor of the " + createdObject.getClass().getSimpleName()
+						"The constructor of the " + createdObject.getClass().getSimpleName()					
 								+ " class should initialize the instance variable \"" + currName + "\" correctly.",
 						currValue, f.get(createdObject));
 			}
