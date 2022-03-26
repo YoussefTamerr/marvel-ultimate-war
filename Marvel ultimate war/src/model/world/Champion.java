@@ -34,6 +34,7 @@ public class Champion {
 	{
 		this.name = name;
 		this.maxHP = maxHP;
+		currentHP = maxHP;
 		this.mana = mana;
 		this.maxActionPointsPerTurn = maxActions;
 		this.speed = speed;
