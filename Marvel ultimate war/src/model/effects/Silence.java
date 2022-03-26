@@ -1,14 +1,14 @@
 package model.effects;
 
 public class Silence extends Effect {
-
-	public Silence(String name, int duration, EffectType type) {
+	int Silence;
+	public Silence(String name, int duration, EffectType type,int Silence) {
 		super(name, duration, EffectType.DEBUFF);
-		// TODO Auto-generated constructor stub
+		this.Silence=Silence;
 	}
 
-	public Silence() {
-		// TODO Auto-generated constructor stub
+	public Silence(int Silence) {
+		super();
+		this.Silence=Silence;
 	}
-
 }

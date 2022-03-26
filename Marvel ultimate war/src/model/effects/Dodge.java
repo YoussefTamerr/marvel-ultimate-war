@@ -1,14 +1,14 @@
 package model.effects;
 
 public class Dodge extends Effect {
-
-	public Dodge(String name, int duration, EffectType type) {
+	int Dodge;
+	public Dodge(String name, int duration, EffectType type,int Dodge) {
 		super(name, duration, EffectType.BUFF);
-		// TODO Auto-generated constructor stub
+		this.Dodge=Dodge;
 	}
-
-	public Dodge() {
-		// TODO Auto-generated constructor stub
+	public Dodge(int Dodge) {
+		super("Dodge",6,EffectType.BUFF);
+		this.Dodge=Dodge;
 	}
 
 }

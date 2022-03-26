@@ -1,14 +1,17 @@
 package model.effects;
 
 public class SpeedUp extends Effect{
+	int SpeedUp;
 
-	public SpeedUp(String name, int duration, EffectType type) {
+	public SpeedUp(String name, int duration, EffectType type,int SpeedUp) {
 		super(name, duration, EffectType.BUFF);
-		// TODO Auto-generated constructor stub
+		this.SpeedUp=SpeedUp;
 	}
 
-	public SpeedUp() {
-		// TODO Auto-generated constructor stub
+	public SpeedUp(int speedUp) {
+		super("SpeedUp",13,EffectType.BUFF);
+		SpeedUp = speedUp;
 	}
+	
 
 }

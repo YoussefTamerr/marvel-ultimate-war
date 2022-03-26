@@ -1,9 +1,10 @@
 package model.effects;
 
 public class Root extends Effect{
-
-	public Root(String name, int duration, EffectType type) {
+	int Root;
+	public Root(String name, int duration, EffectType type,int Root) {
 		super(name, duration, EffectType.DEBUFF);
+		this.Root=Root;
 		// TODO Auto-generated constructor stub
 	}
 

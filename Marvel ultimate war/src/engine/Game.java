@@ -29,6 +29,9 @@ public class Game {
 	private PriorityQueue turnOrder;
 	private static int BOARDHEIGHT;
 	private static int BOARDWIDTH;
+	public Game () {
+		
+	}
 	
 	public Game (Player firstPlayer, Player secondPlayer) throws Exception
 	{
@@ -40,8 +43,8 @@ public class Game {
 		availableChampions =new ArrayList<Champion>() ;
 		availableAbilities =new ArrayList<Ability>() ;
 		PriorityQueue turnOrder=new PriorityQueue(15);
-		int BOARDHEIGHT=5;
-		int BOARDWIDTH=5;
+		//int BOARDHEIGHT=5;
+		//int BOARDWIDTH=5;
 		placeChampions();
 		placeCovers();
 		String filepath="/Marvel ultimate war/Abilities.csv";
@@ -77,13 +80,13 @@ public class Game {
 	private void placeChampions() { 
 		
 		
-		board[0][1] = firstPlayer.getTeam().get(0);
-		board[0][2] = firstPlayer.getTeam().get(1);
-		board[0][3] = firstPlayer.getTeam().get(2);
+		board[1][0] = firstPlayer.getTeam().get(0);
+		board[2][0] = firstPlayer.getTeam().get(1);
+		board[3][0] = firstPlayer.getTeam().get(2);
 		
-		board[4][1] = secondPlayer.getTeam().get(0);
-		board[4][2] = secondPlayer.getTeam().get(1);
-		board[4][3] = secondPlayer.getTeam().get(2);
+		board[1][4] = secondPlayer.getTeam().get(0);
+		board[2][4] = secondPlayer.getTeam().get(1);
+		board[3][4] = secondPlayer.getTeam().get(2);
 		
 		
 	}

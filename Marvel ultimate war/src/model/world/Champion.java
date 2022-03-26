@@ -39,6 +39,11 @@ public class Champion {
 		this.speed = speed;
 		this.attackRange = attackRange;
 		this.attackDamage = attackDamage;
+		abilities=new ArrayList<Ability>();
+		appliedEffects = new ArrayList<Effect>();
+		currentHP =maxHP;
+		currentActionPoints=maxActions;
+		condition=Condition.ACTIVE;
 	}
 
 	public int getCurrentHP() {
