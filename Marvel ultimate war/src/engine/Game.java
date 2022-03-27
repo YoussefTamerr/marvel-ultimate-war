@@ -34,10 +34,10 @@ public class Game {
 		
 	}
 	
-	public Game (Player firstPlayer, Player secondPlayer) throws Exception
+	public Game (Player first, Player second) throws Exception
 	{
-		this.firstPlayer = firstPlayer;
-		this.secondPlayer = secondPlayer;
+		this.firstPlayer = first;
+		this.secondPlayer = second;
 		board = new Object[5][5];
 		firstLeaderAbilityUsed=false;
 		secondLeaderAbilityUsed=false;
@@ -47,9 +47,11 @@ public class Game {
 		
 		placeChampions();
 		placeCovers();
-		String filepath="C:\\Users\\youss\\git\\marvel-ultimate-war\\Marvel ultimate war\\Abilities.csv";///////////////////////////////
+		String filepath="/Marvel ultimate war/Abilities.csv";
+		//String filepath = "C:\\Users\\youss\\git\\marvel-ultimate-war\\Marvel ultimate war\\Abilities.csv";
 		loadAbilities(filepath);
-		String filepathc="C:\\Users\\youss\\git\\marvel-ultimate-war\\Marvel ultimate war\\Champions.csv";
+		String filepathc="/Marvel ultimate war/Champions.csv";
+		//String filepathc= "C:\\Users\\youss\\git\\marvel-ultimate-war\\Marvel ultimate war\\Champions.csv";
 		loadChampions(filepathc);
 		
 	}
@@ -87,6 +89,7 @@ public class Game {
 		ArrayList<Champion>team1= firstPlayer.getTeam();
 		for(int i=0;i<team1.size();i++) {
 		board[0][i+1] = team1.get(i);
+		team1.get(i).setLocation(new Point(0,i+1));
 		//ch1.setLocation(new Point(1,0));
 		//board[0][2] = ch2;
 		//ch2.setLocation(new Point(2,0));
@@ -96,6 +99,7 @@ public class Game {
 		ArrayList<Champion>team2= secondPlayer.getTeam();
 		for(int i=0;i<team2.size();i++) {
 		board[4][i+1] = team2.get(i);
+		team1.get(i).setLocation(new Point(0,i+1));
 		//ch1.setLocation(new Point(1,0));
 		//board[0][2] = ch2;
 		//ch2.setLocation(new Point(2,0));
@@ -173,6 +177,7 @@ public class Game {
 		return c;
 	}
 	
+	
 	public static Ability createAbility(String[] s)
 	{
 		
@@ -209,7 +214,7 @@ public class Game {
 			et = EffectType.DEBUFF;
 			break;
 		}
-		/*AreaOfEffect aoe = null;
+		AreaOfEffect aoe = null;
 		switch(s[5]) {
 		case "SELFTARGET" :
 			aoe = AreaOfEffect.SELFTARGET;
@@ -227,18 +232,18 @@ public class Game {
 			aoe = AreaOfEffect.SURROUND;
 			break;
 		
-		}*/
+		}
 		Ability a = null; /////rage3 3ala 7tet s[3] w s[4]//////////////
 		switch (s[0]) {
 		case "CC" :
 			Effect e = new Effect(s[7], Integer.parseInt(s[8]), et );
-			a = new CrowdControlAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[3]), Integer.parseInt(s[4]), AreaOfEffect.valueOf(s[5]) ,Integer.parseInt(s[6]), e);
+			a = new CrowdControlAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[4]), Integer.parseInt(s[3]), aoe ,Integer.parseInt(s[6]), e);
 			break;
 		case "DMG" :
-			a = new DamagingAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[3]), Integer.parseInt(s[4]), AreaOfEffect.valueOf(s[5]) ,Integer.parseInt(s[6]), Integer.parseInt(s[7]) );
+			a = new DamagingAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[4]), Integer.parseInt(s[3]), aoe ,Integer.parseInt(s[6]), Integer.parseInt(s[7]) );
 			break;
 		case "HEL" :
-			a = new HealingAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[3]), Integer.parseInt(s[4]), AreaOfEffect.valueOf(s[5]) ,Integer.parseInt(s[6]), Integer.parseInt(s[7]) ); 
+			a = new HealingAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[4]), Integer.parseInt(s[3]), aoe ,Integer.parseInt(s[6]), Integer.parseInt(s[7]) ); 
 			break;
 		}
 		return a;

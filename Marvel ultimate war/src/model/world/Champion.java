@@ -46,7 +46,7 @@ public class Champion {
 		currentActionPoints=maxActions;
 		condition=Condition.ACTIVE;
 	}
-
+	
 	public int getCurrentHP() {
 		return currentHP;
 	}

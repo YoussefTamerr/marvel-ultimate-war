@@ -7,7 +7,7 @@ public class Ability {
 	private int currentCooldown;
 	private int castRange;
 	private int requiredActionPoints;
-	AreaOfEffect castArea;
+	private AreaOfEffect castArea;
 
 	public Ability(String name, int cost, int baseCoolDown, int castRange, AreaOfEffect area, int required) {
 		this.name = name;
@@ -48,7 +48,7 @@ public class Ability {
 		return requiredActionPoints;
 	}
 
-	AreaOfEffect getCastArea() {
+	public AreaOfEffect getCastArea() {
 		return castArea;
 	}
 
