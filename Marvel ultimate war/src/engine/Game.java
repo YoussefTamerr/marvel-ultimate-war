@@ -43,13 +43,13 @@ public class Game {
 		secondLeaderAbilityUsed=false;
 		availableChampions =new ArrayList<Champion>() ;
 		availableAbilities =new ArrayList<Ability>() ;
-		PriorityQueue turnOrder=new PriorityQueue(6);
+		turnOrder=new PriorityQueue(6);
 		
 		placeChampions();
 		placeCovers();
-		String filepath="/Marvel ultimate war/Abilities.csv";
+		String filepath="C:\\Users\\youss\\git\\marvel-ultimate-war\\Marvel ultimate war\\Abilities.csv";///////////////////////////////
 		loadAbilities(filepath);
-		String filepathc="/Marvel ultimate war/Champions.csv";
+		String filepathc="C:\\Users\\youss\\git\\marvel-ultimate-war\\Marvel ultimate war\\Champions.csv";
 		loadChampions(filepathc);
 		
 	}
@@ -61,8 +61,8 @@ public class Game {
 		//Cover[] cArr = new Cover[5];
 
 		for (int i = 0; i < 5; i++) {
-			int x = (int) Math.random() * 4;
-			int y = (int) Math.random() * 4;
+			int x =  (int) Math.random() * 4;
+			int y =  (int) Math.random() * 4;
 			while ((board[x][y] != null) || (x == 4 && y == 4) 
 					|| (x == 0 && y == 0) 
 					|| (x == 4 && y == 0)
@@ -138,9 +138,11 @@ public class Game {
 		String line = "";
 		while((line = br.readLine()) != null)
 		{
-			String[] values = line.split(",");
-			Champion ch = createChampion(values);
-			availableChampions.add(ch);
+			String[] s = line.split(",");
+			Champion c = createChampion(s);
+			availableChampions.add(c);
+			
+			
 		}
 		
 	}
@@ -207,7 +209,7 @@ public class Game {
 			et = EffectType.DEBUFF;
 			break;
 		}
-		AreaOfEffect aoe = null;
+		/*AreaOfEffect aoe = null;
 		switch(s[5]) {
 		case "SELFTARGET" :
 			aoe = AreaOfEffect.SELFTARGET;
@@ -225,18 +227,18 @@ public class Game {
 			aoe = AreaOfEffect.SURROUND;
 			break;
 		
-		}
-		Ability a = null;
+		}*/
+		Ability a = null; /////rage3 3ala 7tet s[3] w s[4]//////////////
 		switch (s[0]) {
 		case "CC" :
 			Effect e = new Effect(s[7], Integer.parseInt(s[8]), et );
-			a = new CrowdControlAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[4]), Integer.parseInt(s[3]), aoe ,Integer.parseInt(s[6]), e);
+			a = new CrowdControlAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[3]), Integer.parseInt(s[4]), AreaOfEffect.valueOf(s[5]) ,Integer.parseInt(s[6]), e);
 			break;
 		case "DMG" :
-			a = new DamagingAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[4]), Integer.parseInt(s[3]), aoe ,Integer.parseInt(s[6]), Integer.parseInt(s[7]) );
+			a = new DamagingAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[3]), Integer.parseInt(s[4]), AreaOfEffect.valueOf(s[5]) ,Integer.parseInt(s[6]), Integer.parseInt(s[7]) );
 			break;
 		case "HEL" :
-			a = new HealingAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[4]), Integer.parseInt(s[3]), aoe ,Integer.parseInt(s[6]), Integer.parseInt(s[7]) ); 
+			a = new HealingAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[3]), Integer.parseInt(s[4]), AreaOfEffect.valueOf(s[5]) ,Integer.parseInt(s[6]), Integer.parseInt(s[7]) ); 
 			break;
 		}
 		return a;

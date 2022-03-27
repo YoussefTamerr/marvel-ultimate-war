@@ -13,6 +13,7 @@ public class Ability {
 		this.name = name;
 		this.manaCost = cost;
 		this.baseCooldown = baseCoolDown;
+		
 		this.castRange = castRange;
 		this.castArea = area;
 		this.requiredActionPoints = required;
