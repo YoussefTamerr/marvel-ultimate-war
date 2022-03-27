@@ -58,19 +58,21 @@ public class Game {
 	
 	private void placeCovers() {
 		
-		Cover[] cArr = new Cover[5];
+		//Cover[] cArr = new Cover[5];
 
 		for (int i = 0; i < 5; i++) {
 			int x = (int) Math.random() * 4;
 			int y = (int) Math.random() * 4;
-			while ((board[x][y] != null) || (x == 4 && y == 4) || (x == 0 && y == 0) || (x == 4 && y == 0)
+			while ((board[x][y] != null) || (x == 4 && y == 4) 
+					|| (x == 0 && y == 0) 
+					|| (x == 4 && y == 0)
 					|| (x == 0 && y == 4)) {
 				x = (int) Math.random() * 4;
 				y = (int) Math.random() * 4;
 
 			}
 			Cover c = new Cover(x, y);
-			cArr[i] = c;
+			//cArr[i] = c;
 			board[x][y] = c;
 
 		}
@@ -79,26 +81,37 @@ public class Game {
 
 	private void placeChampions() { //////////////////////////////////////////////////
 		
-		Champion ch1 = firstPlayer.getTeam().get(0);
-		Champion ch2 = firstPlayer.getTeam().get(1);
-		Champion ch3 = firstPlayer.getTeam().get(2);
-		
-		board[0][1] = ch1;
+		//Champion ch1 = firstPlayer.getTeam().get(0);
+	//	Champion ch2 = firstPlayer.getTeam().get(1);
+		//Champion ch3 = firstPlayer.getTeam().get(2);
+		ArrayList<Champion>team1= firstPlayer.getTeam();
+		for(int i=0;i<team1.size();i++) {
+		board[0][i+1] = team1.get(i);
 		//ch1.setLocation(new Point(1,0));
-		board[0][2] = ch2;
+		//board[0][2] = ch2;
 		//ch2.setLocation(new Point(2,0));
-		board[0][3] = ch3;
+		//board[0][3] = ch3;
 		//ch3.setLocation(new Point(3,0));
+		}
+		ArrayList<Champion>team2= secondPlayer.getTeam();
+		for(int i=0;i<team2.size();i++) {
+		board[4][i+1] = team2.get(i);
+		//ch1.setLocation(new Point(1,0));
+		//board[0][2] = ch2;
+		//ch2.setLocation(new Point(2,0));
+		//board[0][3] = ch3;
+		//ch3.setLocation(new Point(3,0));
+		}
+
+		//{Champion v1 = secondPlayer.getTeam().get(0);
+		//Champion v2 = secondPlayer.getTeam().get(1);
+		//Champion v3 = secondPlayer.getTeam().get(2);
 		
-		Champion v1 = secondPlayer.getTeam().get(0);
-		Champion v2 = secondPlayer.getTeam().get(1);
-		Champion v3 = secondPlayer.getTeam().get(2);
-		
-		board[4][1] = v1;
+		//board[4][1] = v1;
 		//v1.setLocation(new Point(1,4));
-		board[4][2] = v2;
+		//board[4][2] = v2;
 		//v2.setLocation(new Point(2,4));
-		board[4][3] = v3;
+		//board[4][3] = v3;
 		//v3.setLocation(new Point(3,4));
 		
 		
@@ -256,10 +269,10 @@ public class Game {
 	public PriorityQueue getTurnOrder() {
 		return turnOrder;
 	}
-	public static int getBOARDHEIGHT() {
+	public static int getBoardheight() {
 		return BOARDHEIGHT;
 	}
-	public static int getBOARDWIDTH() {
+	public static int getBoardwidth() {
 		return BOARDWIDTH;
 	}
 	
