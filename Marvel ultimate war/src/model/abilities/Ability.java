@@ -15,11 +15,11 @@ public class Ability {
 		this.baseCooldown = baseCoolDown;
 		
 		this.castRange = castRange;
-		this.castArea = area;
+		this.castArea = area;	
 		this.requiredActionPoints = required;
 
 	}
-
+					
 	public String getName() {
 		return name;
 	}

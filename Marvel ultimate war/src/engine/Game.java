@@ -10,8 +10,18 @@ import model.abilities.AreaOfEffect;
 import model.abilities.CrowdControlAbility;
 import model.abilities.DamagingAbility;
 import model.abilities.HealingAbility;
+import model.effects.Disarm;
+import model.effects.Dodge;
 import model.effects.Effect;
 import model.effects.EffectType;
+import model.effects.Embrace;
+import model.effects.PowerUp;
+import model.effects.Root;
+import model.effects.Shield;
+import model.effects.Shock;
+import model.effects.Silence;
+import model.effects.SpeedUp;
+import model.effects.Stun;
 import model.world.AntiHero;
 import model.world.Champion;
 import model.world.Cover;
@@ -47,10 +57,10 @@ public class Game {
 		
 		placeChampions();
 		placeCovers();
-		String filepath="C:\\Users\\youss\\git\\marvel-ultimate-war\\Marvel ultimate war\\Abilities.csv";///////////////////////////////
-		loadAbilities(filepath);
-		String filepathc="C:\\Users\\youss\\git\\marvel-ultimate-war\\Marvel ultimate war\\Champions.csv";
-		loadChampions(filepathc);
+		//String filepath="C:\\Users\\youss\\git\\marvel-ultimate-war\\Marvel ultimate war\\Abilities.csv";///////////////////////////////
+		//loadAbilities(filepath);
+		//String filepathc="C:\\Users\\youss\\git\\marvel-ultimate-war\\Marvel ultimate war\\Champions.csv";
+		////loadChampions(filepathc);
 		
 	}
 	
@@ -61,33 +71,36 @@ public class Game {
 		//Cover[] cArr = new Cover[5];
 
 		for (int i = 0; i < 5; i++) {
-			int x =  (int) Math.random() * 4;
-			int y =  (int) Math.random() * 4;
-			while ((board[x][y] != null) || (x == 4 && y == 4) 
-					|| (x == 0 && y == 0) 
-					|| (x == 4 && y == 0)
-					|| (x == 0 && y == 4)) {
-				x = (int) Math.random() * 4;
-				y = (int) Math.random() * 4;
+			int x=  (int) (Math.random() * 5);
+			int y =  (int) (Math.random() * 3)+1;
+			while ((board[y][x] != null) 
+//					|| (x == 4 && y == 4) 
+//					|| (x == 0 && y == 0) 
+//					|| (x == 4 && y == 0)
+//					|| (x == 0 && y == 4)) 
+					){
+				x= (int) (Math.random() * 5);
+				y = (int) (Math.random() * 3)+1;
 
 			}
-			Cover c = new Cover(x, y);
+			Cover c = new Cover(y, x);
 			//cArr[i] = c;
-			board[x][y] = c;
+			board[y][x] = c;
 
 		}
 	}
 
 
-	private void placeChampions() { //////////////////////////////////////////////////
+	private void placeChampions() { 
 		
-		//Champion ch1 = firstPlayer.getTeam().get(0);
-	//	Champion ch2 = firstPlayer.getTeam().get(1);
+		
+	//	
 		//Champion ch3 = firstPlayer.getTeam().get(2);
 		ArrayList<Champion>team1= firstPlayer.getTeam();
 		for(int i=0;i<team1.size();i++) {
 		board[0][i+1] = team1.get(i);
-		//ch1.setLocation(new Point(1,0));
+		Champion ch1 = firstPlayer.getTeam().get(i);
+		ch1.setLocation(new Point(0,i+1));
 		//board[0][2] = ch2;
 		//ch2.setLocation(new Point(2,0));
 		//board[0][3] = ch3;
@@ -96,7 +109,8 @@ public class Game {
 		ArrayList<Champion>team2= secondPlayer.getTeam();
 		for(int i=0;i<team2.size();i++) {
 		board[4][i+1] = team2.get(i);
-		//ch1.setLocation(new Point(1,0));
+		Champion ch2 = secondPlayer.getTeam().get(i);
+		ch2.setLocation(new Point(4,i+1));
 		//board[0][2] = ch2;
 		//ch2.setLocation(new Point(2,0));
 		//board[0][3] = ch3;
@@ -166,7 +180,9 @@ public class Game {
 		String ability2=s[9];
 		String ability3=s[10];
 		for(int f =0; f< availableAbilities.size();f++) {
+			
 		Ability ability=availableAbilities.get(f);
+		
 		if(ability.getName().equals(ability1)||ability.getName().equals(ability2)||ability.getName().equals(ability3))
 			c.getAbilities().add(ability);
 		}
@@ -176,37 +192,49 @@ public class Game {
 	public static Ability createAbility(String[] s)
 	{
 		
-		EffectType et =null;
+		//EffectType et = null;
+		//AreaOfEffect ae =  AreaOfEffect.valueOf(s[5]);
+		Effect e = null;
 		switch(s[7]) {
 		case "Disarm" :
-			et = EffectType.DEBUFF;
+			//et = EffectType.BUFF;
+			e = new Disarm(Integer.parseInt(s[8]));
 			break;
 		case "PowerUp" :
-			et = EffectType.BUFF;
+			//et = EffectType.BUFF;
+			e = new PowerUp(Integer.parseInt(s[8]));
 			break;
 		case "Shield" :
-			et = EffectType.BUFF;
+			//et = EffectType.BUFF;
+			e = new Shield(Integer.parseInt(s[8]));
 			break;
 		case "Silence" :
-			et = EffectType.DEBUFF;
+			//et = EffectType.DEBUFF;
+			e = new Silence(Integer.parseInt(s[8]));
 			break;
 		case "SpeedUp" :
-			et = EffectType.BUFF;
+			//et = EffectType.BUFF;
+			e = new SpeedUp(Integer.parseInt(s[8]));
 			break;
 		case "Embrace" :
-			et = EffectType.BUFF;
+			//et = EffectType.BUFF;
+			e = new Embrace(Integer.parseInt(s[8]));
 			break;
 		case "Root" :
-			et = EffectType.DEBUFF;
+			//et = EffectType.DEBUFF;
+			e = new Root(Integer.parseInt(s[8]));
 			break;
 		case "Shock" :
-			et = EffectType.DEBUFF;
+			//et = EffectType.DEBUFF;
+			e = new Shock(Integer.parseInt(s[8]));
 			break;
 		case "Dodge" :
-			et = EffectType.BUFF;
+			//et = EffectType.BUFF;
+			e = new Dodge(Integer.parseInt(s[8]));
 			break;
 		case "Stun" :
-			et = EffectType.DEBUFF;
+			//et = EffectType.DEBUFF;
+			e = new Stun(Integer.parseInt(s[8]));
 			break;
 		}
 		/*AreaOfEffect aoe = null;
@@ -231,14 +259,15 @@ public class Game {
 		Ability a = null; /////rage3 3ala 7tet s[3] w s[4]//////////////
 		switch (s[0]) {
 		case "CC" :
-			Effect e = new Effect(s[7], Integer.parseInt(s[8]), et );
-			a = new CrowdControlAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[3]), Integer.parseInt(s[4]), AreaOfEffect.valueOf(s[5]) ,Integer.parseInt(s[6]), e);
+			a = new CrowdControlAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[4]), Integer.parseInt(s[3]), AreaOfEffect.valueOf(s[5]) ,Integer.parseInt(s[6]), e);
 			break;
 		case "DMG" :
-			a = new DamagingAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[3]), Integer.parseInt(s[4]), AreaOfEffect.valueOf(s[5]) ,Integer.parseInt(s[6]), Integer.parseInt(s[7]) );
+			a = new DamagingAbility(s[1] , 
+					Integer.parseInt(s[2]), Integer.parseInt(s[4]), Integer.parseInt(s[3]),
+					AreaOfEffect.valueOf(s[5]) ,Integer.parseInt(s[6]),Integer.parseInt(s[7]));
 			break;
 		case "HEL" :
-			a = new HealingAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[3]), Integer.parseInt(s[4]), AreaOfEffect.valueOf(s[5]) ,Integer.parseInt(s[6]), Integer.parseInt(s[7]) ); 
+			a = new HealingAbility(s[1] , Integer.parseInt(s[2]), Integer.parseInt(s[4]), Integer.parseInt(s[3]), AreaOfEffect.valueOf(s[5]) ,Integer.parseInt(s[6]), Integer.parseInt(s[7]) ); 
 			break;
 		}
 		return a;
@@ -277,6 +306,11 @@ public class Game {
 	public static int getBoardwidth() {
 		return BOARDWIDTH;
 	}
-	
+	//public static void main (String[]args) {
+		//String filePath;
+	//	BufferedReader br= new BufferedReader(new FileReader(filePath));
+	//	String line = "";
+	//	for (int i =0;i)
+	//}
 	
 }
