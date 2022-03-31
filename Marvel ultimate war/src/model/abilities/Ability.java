@@ -1,6 +1,6 @@
 package model.abilities;
 
-public class Ability {
+public class Ability { // zabat el current cooldown
 	private String name;
 	private int manaCost;
 	private int baseCooldown;

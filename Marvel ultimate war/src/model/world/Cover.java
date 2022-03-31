@@ -20,7 +20,7 @@ public class Cover {
 		return currentHP;
 	}
 
-	public void setCurrentHP(int currentHP) {
+	public void setCurrentHP(int currentHP) { //lao a2al men zero ?
 		this.currentHP = currentHP;
 	}
 

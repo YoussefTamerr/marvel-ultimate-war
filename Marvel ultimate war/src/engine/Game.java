@@ -44,10 +44,10 @@ public class Game {
 		
 	}
 	
-	public Game (Player firstPlayer, Player secondPlayer) throws Exception
+	public Game (Player first, Player second) throws Exception
 	{
-		this.firstPlayer = firstPlayer;
-		this.secondPlayer = secondPlayer;
+		this.firstPlayer = first;
+		this.secondPlayer = second;
 		board = new Object[5][5];
 		firstLeaderAbilityUsed=false;
 		secondLeaderAbilityUsed=false;
@@ -96,26 +96,20 @@ public class Game {
 		
 	//	
 		//Champion ch3 = firstPlayer.getTeam().get(2);
-		ArrayList<Champion>team1= firstPlayer.getTeam();
-		for(int i=0;i<team1.size();i++) {
-		board[0][i+1] = team1.get(i);
+	ArrayList<Champion> team1 = firstPlayer.getTeam();
+	for (int i = 0; i < team1.size(); i++) {
+		board[0][i + 1] = team1.get(i);
 		Champion ch1 = firstPlayer.getTeam().get(i);
-		ch1.setLocation(new Point(0,i+1));
-		//board[0][2] = ch2;
-		//ch2.setLocation(new Point(2,0));
-		//board[0][3] = ch3;
-		//ch3.setLocation(new Point(3,0));
-		}
-		ArrayList<Champion>team2= secondPlayer.getTeam();
-		for(int i=0;i<team2.size();i++) {
-		board[4][i+1] = team2.get(i);
+		ch1.setLocation(new Point(0, i + 1));
+
+	}
+	ArrayList<Champion> team2 = secondPlayer.getTeam();
+	for (int i = 0; i < team2.size(); i++) {
+		board[4][i + 1] = team2.get(i);
 		Champion ch2 = secondPlayer.getTeam().get(i);
-		ch2.setLocation(new Point(4,i+1));
-		//board[0][2] = ch2;
-		//ch2.setLocation(new Point(2,0));
-		//board[0][3] = ch3;
-		//ch3.setLocation(new Point(3,0));
-		}
+		ch2.setLocation(new Point(4, i + 1));
+
+	}
 
 		//{Champion v1 = secondPlayer.getTeam().get(0);
 		//Champion v2 = secondPlayer.getTeam().get(1);

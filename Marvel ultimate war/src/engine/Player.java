@@ -9,7 +9,7 @@ public class Player {
 	private Champion leader;
 	ArrayList<Champion> team;
 	
-	public Player(String name)
+	public Player(String name) //nsheel leader ?
 	{
 		this.name = name;
 		team=new ArrayList<Champion>();
