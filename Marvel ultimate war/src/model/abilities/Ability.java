@@ -1,6 +1,6 @@
 package model.abilities;
 
-public class Ability {
+public class Ability { // zabat el current cooldown
 	private String name;
 	private int manaCost;
 	private int baseCooldown;
@@ -15,11 +15,11 @@ public class Ability {
 		this.baseCooldown = baseCoolDown;
 		
 		this.castRange = castRange;
-		this.castArea = area;
+		this.castArea = area;	
 		this.requiredActionPoints = required;
 
 	}
-
+					
 	public String getName() {
 		return name;
 	}

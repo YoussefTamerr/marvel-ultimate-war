@@ -1,6 +1,6 @@
 package model.abilities;
 
-public class DamagingAbility extends Ability {
+public class DamagingAbility extends Ability {//set damage amount
 	private int damageAmount;
 
 	public DamagingAbility(String name, int cost, int baseCoolDown, int castRange, AreaOfEffect area, int required,int damageAmount) {
