@@ -13,7 +13,7 @@ public class Player {
 	{
 		this.name = name;
 		team=new ArrayList<Champion>();
-		leader=new Champion();
+		
 	}
 
 	public Champion getLeader() {

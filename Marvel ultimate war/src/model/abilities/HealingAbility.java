@@ -6,7 +6,7 @@ public class HealingAbility extends Ability {
 	public HealingAbility(String name, int cost, int baseCoolDown, int castRange, AreaOfEffect area, int required,
 			int healAmount) {
 		super(name, cost, baseCoolDown, castRange, area, required);
-		this.setHealAmount(healAmount);
+		this.healAmount = healAmount;
 	}
 
 	public int getHealAmount() {

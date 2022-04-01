@@ -5,7 +5,7 @@ public class DamagingAbility extends Ability {//set damage amount
 
 	public DamagingAbility(String name, int cost, int baseCoolDown, int castRange, AreaOfEffect area, int required,int damageAmount) {
 		super(name, cost, baseCoolDown, castRange, area, required);
-		this.setDamageAmount(damageAmount);
+		this.damageAmount = damageAmount;
 	}
 
 	public int getDamageAmount() {
