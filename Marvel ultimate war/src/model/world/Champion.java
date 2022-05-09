@@ -7,7 +7,7 @@ import model.effects.Effect;
 
 import java.awt.Point;
 
-public class Champion {
+public class Champion implements Damageable {
 	
 	private String name;
 	private int maxHP;
