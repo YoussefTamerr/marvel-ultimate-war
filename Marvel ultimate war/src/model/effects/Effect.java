@@ -1,6 +1,8 @@
 package model.effects;
 
-public class Effect {
+import model.world.Champion;
+
+public abstract class Effect implements Cloneable {
 	private String name;
 	private int duration;
 	private EffectType type;
@@ -24,5 +26,8 @@ public class Effect {
 		this.duration=duration;
 		this.type=type;
 	}
-
+	public abstract void apply(Champion c);
+	public abstract void remove(Champion c);
+		
+	
 }

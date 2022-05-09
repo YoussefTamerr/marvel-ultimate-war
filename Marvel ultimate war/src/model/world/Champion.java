@@ -56,10 +56,7 @@ public class Champion implements Damageable {
 			this.currentHP = maxHP;
 		else if(currentHP <0) {
 			this.currentHP = 0;
-			condition = Condition.KNOCKEDOUT;
 		}
-		else if(currentHP == 0)
-			condition = Condition.KNOCKEDOUT;
 		else
 			this.currentHP = currentHP;
 	}

@@ -13,7 +13,7 @@ public class Ability { // zabat el current cooldown
 		this.name = name;
 		this.manaCost = cost;
 		this.baseCooldown = baseCoolDown;
-		
+		this.currentCooldown=0;
 		this.castRange = castRange;
 		this.castArea = area;	
 		this.requiredActionPoints = required;
