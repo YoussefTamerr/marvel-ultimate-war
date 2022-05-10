@@ -1,25 +1,42 @@
 package model.abilities;
 
-public class Ability { // zabat el current cooldown
+import java.util.ArrayList;
+
+import model.world.Damageable;
+
+public abstract class Ability {
 	private String name;
 	private int manaCost;
 	private int baseCooldown;
 	private int currentCooldown;
 	private int castRange;
-	private int requiredActionPoints;
 	private AreaOfEffect castArea;
+	private int requiredActionPoints;
 
 	public Ability(String name, int cost, int baseCoolDown, int castRange, AreaOfEffect area, int required) {
 		this.name = name;
 		this.manaCost = cost;
 		this.baseCooldown = baseCoolDown;
-		this.currentCooldown=0;
+		this.currentCooldown = 0;
 		this.castRange = castRange;
-		this.castArea = area;	
+		this.castArea = area;
 		this.requiredActionPoints = required;
-
 	}
-					
+	
+	public abstract void execute (ArrayList<Damageable> targets);
+
+	public int getCurrentCooldown() {
+		return currentCooldown;
+	}
+
+	public void setCurrentCooldown(int currentCoolDown) {
+		if (currentCoolDown < 0)
+			currentCoolDown = 0;
+		else if (currentCoolDown > baseCooldown)
+			currentCoolDown = baseCooldown;
+		this.currentCooldown = currentCoolDown;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -32,31 +49,16 @@ public class Ability { // zabat el current cooldown
 		return baseCooldown;
 	}
 
-	public int getCurrentCooldown() {
-		return currentCooldown;
-	}
-
-	public void setCurrentCooldown(int currentCooldown) {
-		if(currentCooldown > baseCooldown)
-		{
-			this.currentCooldown = baseCooldown;
-		}
-		else
-		{
-			this.currentCooldown = currentCooldown;
-		}
-	}
-
 	public int getCastRange() {
 		return castRange;
 	}
 
-	public int getRequiredActionPoints() {
-		return requiredActionPoints;
-	}
-
 	public AreaOfEffect getCastArea() {
 		return castArea;
+	}
+
+	public int getRequiredActionPoints() {
+		return requiredActionPoints;
 	}
 
 }

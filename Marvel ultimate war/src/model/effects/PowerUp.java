@@ -1,6 +1,7 @@
 package model.effects;
 
 import model.abilities.DamagingAbility;
+import model.abilities.HealingAbility;
 import model.world.Champion;
 
 public class PowerUp extends Effect{
@@ -16,8 +17,17 @@ public class PowerUp extends Effect{
 			if(c.getAbilities().get(i) instanceof DamagingAbility)
 			{
 				DamagingAbility d = (DamagingAbility)c.getAbilities().get(i);
-				d.setDamageAmount();
+				int temp = d.getDamageAmount();
+				temp += temp*0.2;
+				d.setDamageAmount(temp);
 				
+			}
+			else if(c.getAbilities().get(i) instanceof HealingAbility)
+			{
+				HealingAbility d = (HealingAbility)c.getAbilities().get(i);
+				int temp = d.getHealAmount();
+				temp += temp*0.2;
+				d.setHealAmount(temp);
 			}
 		}
 		
@@ -25,7 +35,24 @@ public class PowerUp extends Effect{
 
 	@Override
 	public void remove(Champion c) {
-		// TODO Auto-generated method stub
+		for(int i=0; i< c.getAbilities().size();i++) {
+			
+			if(c.getAbilities().get(i) instanceof DamagingAbility)
+			{
+				DamagingAbility d = (DamagingAbility)c.getAbilities().get(i);
+				int temp = d.getDamageAmount();
+				temp = (int)(temp/1.2);
+				d.setDamageAmount(temp);
+				
+			}
+			else if(c.getAbilities().get(i) instanceof HealingAbility)
+			{
+				HealingAbility d = (HealingAbility)c.getAbilities().get(i);
+				int temp = d.getHealAmount();
+				temp = (int)(temp/1.2);
+				d.setHealAmount(temp);
+			}
+		}
 		
 	}
 

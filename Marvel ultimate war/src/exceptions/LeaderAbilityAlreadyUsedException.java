@@ -1,5 +1,6 @@
 package exceptions;
 
+@SuppressWarnings("serial")
 public class LeaderAbilityAlreadyUsedException extends GameActionException {
 
 	public LeaderAbilityAlreadyUsedException() {
@@ -9,5 +10,5 @@ public class LeaderAbilityAlreadyUsedException extends GameActionException {
 	public LeaderAbilityAlreadyUsedException(String s) {
 		super(s);
 	}
-	
+
 }

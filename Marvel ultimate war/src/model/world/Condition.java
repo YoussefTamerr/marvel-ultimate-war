@@ -1,5 +1,5 @@
 package model.world;
 
-public enum Condition { //lao hp=0 knockedout ?
+public enum Condition { 
 	ACTIVE, INACTIVE,ROOTED,  KNOCKEDOUT;
 }

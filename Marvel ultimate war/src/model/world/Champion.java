@@ -1,14 +1,13 @@
 package model.world;
 
+import java.awt.Point;
 import java.util.ArrayList;
+
 
 import model.abilities.Ability;
 import model.effects.Effect;
 
-import java.awt.Point;
-
-public class Champion implements Damageable {
-	
+public abstract class Champion implements Damageable, Comparable {
 	private String name;
 	private int maxHP;
 	private int currentHP;
@@ -23,50 +22,76 @@ public class Champion implements Damageable {
 	private Condition condition;
 	private Point location;
 	
-	
 
-	public Champion()
-	{
-		
-	}
-
-	public Champion(String name, int maxHP, int mana, int maxActions, int speed, int attackRange, int attackDamage)
-	{
+	public Champion(String name, int maxHP, int mana, int actions, int speed, int attackRange, int attackDamage) {
 		this.name = name;
 		this.maxHP = maxHP;
 		this.mana = mana;
-		this.maxActionPointsPerTurn = maxActions;
+		this.currentHP = this.maxHP;
+		this.maxActionPointsPerTurn = actions;
 		this.speed = speed;
 		this.attackRange = attackRange;
 		this.attackDamage = attackDamage;
-		
-		abilities = new ArrayList<Ability>();
-		appliedEffects = new ArrayList<Effect>();
-		currentHP = maxHP;
-		currentActionPoints = maxActions;
-		condition = Condition.ACTIVE;
+		this.condition = Condition.ACTIVE;
+		this.abilities = new ArrayList<Ability>();
+		this.appliedEffects = new ArrayList<Effect>();
+		this.currentActionPoints=maxActionPointsPerTurn;
 	}
 	
+	public int compareTo(Object o)
+	{
+		Champion c = (Champion) o;
+		if(speed > c.speed)
+			return 1;
+		else if(speed < c.speed)
+			return -1;
+		else if (this.getName().charAt(0) < c.getName().charAt(0))
+			return 1;
+		else if(this.getName().charAt(0) > c.getName().charAt(0))
+			return -1;
+		else 
+			return 0;
+	}
+	
+	public abstract void useLeaderAbility(ArrayList<Champion> targets);
+
+	public int getMaxHP() {
+		return maxHP;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setCurrentHP(int hp) {
+
+		if (hp < 0) {
+			currentHP = 0;
+			
+		} 
+		else if (hp > maxHP)
+			currentHP = maxHP;
+		else
+			currentHP = hp;
+
+	}
+
+	
 	public int getCurrentHP() {
+
 		return currentHP;
 	}
 
-	public void setCurrentHP(int currentHP) {///////////////////////
-		if(currentHP > this.maxHP)
-			this.currentHP = maxHP;
-		else if(currentHP <0) {
-			this.currentHP = 0;
-		}
-		else
-			this.currentHP = currentHP;
+	public ArrayList<Effect> getAppliedEffects() {
+		return appliedEffects;
 	}
 
-	public int getMaxActionPointsPerTurn() {
-		return maxActionPointsPerTurn;
+	public int getMana() {
+		return mana;
 	}
 
-	public void setMaxActionPointsPerTurn(int maxActionPointsPerTurn) {
-		this.maxActionPointsPerTurn = maxActionPointsPerTurn;
+	public void setMana(int mana) {
+		this.mana = mana;
 	}
 
 	public int getAttackDamage() {
@@ -77,24 +102,15 @@ public class Champion implements Damageable {
 		this.attackDamage = attackDamage;
 	}
 
-	public void setMana(int mana) {
-		this.mana = mana;
-	}
-
-	public void setCurrentActionPoints(int currentActionPoints) {
-		if (currentActionPoints>maxActionPointsPerTurn)
-			this.currentActionPoints= maxActionPointsPerTurn;
-			else if (currentActionPoints<=0)
-				 this.currentActionPoints=0;
-			else 
-				 this.currentActionPoints=currentActionPoints;	}
-
 	public int getSpeed() {
 		return speed;
 	}
 
-	public void setSpeed(int speed) {
-		this.speed = speed;
+	public void setSpeed(int currentSpeed) {
+		if (currentSpeed < 0)
+			this.speed = 0;
+		else
+			this.speed = currentSpeed;
 	}
 
 	public Condition getCondition() {
@@ -109,35 +125,40 @@ public class Champion implements Damageable {
 		return location;
 	}
 
-	public void setLocation(Point location) {
-		this.location = location;
+	public void setLocation(Point currentLocation) {
+		this.location = currentLocation;
 	}
 
-	public String getName() {
-		return name;
+	public int getAttackRange() {
+		return attackRange;
 	}
 
-	public int getMaxHP() {
-		return maxHP;
-	}
-
-	public int getMana() {
-		return mana;
+	public ArrayList<Ability> getAbilities() {
+		return abilities;
 	}
 
 	public int getCurrentActionPoints() {
 		return currentActionPoints;
 	}
 
-	public int getAttackRange() {
-		return attackRange;
+	public void setCurrentActionPoints(int currentActionPoints) {
+		if(currentActionPoints>maxActionPointsPerTurn)
+			currentActionPoints=maxActionPointsPerTurn;
+		else 
+			if(currentActionPoints<0)
+			currentActionPoints=0;
+		this.currentActionPoints = currentActionPoints;
 	}
-	public ArrayList<Ability> getAbilities() {
-		return abilities;
+
+	public int getMaxActionPointsPerTurn() {
+		return maxActionPointsPerTurn;
 	}
+
+	public void setMaxActionPointsPerTurn(int maxActionPointsPerTurn) {
+		this.maxActionPointsPerTurn = maxActionPointsPerTurn;
+	}
+
 	
-	public ArrayList<Effect> getAppliedEffects() {
-		return appliedEffects;
-	}
 	
+
 }
