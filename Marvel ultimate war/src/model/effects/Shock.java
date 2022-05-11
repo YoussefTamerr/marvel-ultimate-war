@@ -28,13 +28,13 @@ public class Shock extends Effect{
 
 	@Override
 	public void remove(Champion c) {  ///// revise the remove of attack damage and speed math issue
-		int s = c.getSpeed();
-		s = (int)(s/1.1);
-		c.setSpeed(s);
+		double s = c.getSpeed();
+		s = s/0.9;
+		c.setSpeed((int)s);
 		
-		int d = c.getAttackDamage();
-		d = (int)((d* 11.11111)/10);
-		c.setAttackDamage(d);
+		double d = c.getAttackDamage();
+		d = d / 0.9;
+		c.setAttackDamage((int) d);
 		
 		int m = c.getMaxActionPointsPerTurn();
 		m+=1;
