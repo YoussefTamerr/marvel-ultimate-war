@@ -17,7 +17,7 @@ public class DamagingAbility extends Ability {
 	public void setDamageAmount(int damageAmount) {
 		this.damageAmount = damageAmount;
 	}
-	public void execute(ArrayList<Damageable> targets) {
+	public void execute(ArrayList<Damageable> targets) { //mesh mezabateen law hero wala villan 3shan fe far2 fel damage percentage
 		for(int i= 0;i<targets.size();i++) {
 			targets.get(i).setCurrentHP(targets.get(i).getCurrentHP() - damageAmount);
 		}

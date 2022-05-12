@@ -41,14 +41,14 @@ public abstract class Champion implements Damageable, Comparable {
 	public int compareTo(Object o)
 	{
 		Champion c = (Champion) o;
-		if(speed > c.speed)
-			return 1;
-		else if(speed < c.speed)
+		if(this.speed > c.speed)
 			return -1;
+		else if(this.speed < c.speed)
+			return 1;
 		else if (this.getName().charAt(0) < c.getName().charAt(0))
-			return 1;
-		else if(this.getName().charAt(0) > c.getName().charAt(0))
 			return -1;
+		else if(this.getName().charAt(0) > c.getName().charAt(0))
+			return 1;
 		else 
 			return 0;
 	}

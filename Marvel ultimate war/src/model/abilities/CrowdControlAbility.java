@@ -23,8 +23,9 @@ public class CrowdControlAbility extends Ability {
 	
 	public void execute(ArrayList<Damageable> targets) {
 		for(int i =0 ;i<targets.size();i++) {
+			if(targets.get(i) instanceof Champion) {
 			Champion c=(Champion) targets.get(i);
-			c.getAppliedEffects().add(effect);
+			c.getAppliedEffects().add(effect);}
 		}
 	}
 

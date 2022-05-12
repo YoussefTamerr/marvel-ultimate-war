@@ -6,6 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import exceptions.GameActionException;
+import exceptions.NotEnoughResourcesException;
+import exceptions.UnallowedMovementException;
 import model.abilities.Ability;
 import model.abilities.AreaOfEffect;
 import model.abilities.CrowdControlAbility;
@@ -24,7 +27,9 @@ import model.effects.SpeedUp;
 import model.effects.Stun;
 import model.world.AntiHero;
 import model.world.Champion;
+import model.world.Condition;
 import model.world.Cover;
+import model.world.Direction;
 import model.world.Hero;
 import model.world.Villain;
 
@@ -50,6 +55,99 @@ public class Game {
 		turnOrder = new PriorityQueue(6);
 		placeChampions();
 		placeCovers();
+		for(int i=0; i<3;i++) {
+			turnOrder.insert(firstPlayer.getTeam().get(i));
+			turnOrder.insert(secondPlayer.getTeam().get(i));
+		}
+	}
+
+	public void move(Direction d) throws GameActionException {
+		Champion current = this.getCurrentChampion();
+
+		if (current.getCurrentActionPoints() < 1) {
+
+			throw new NotEnoughResourcesException();
+		} else {
+
+			switch (d) {
+
+			case UP:
+				int y = (int) current.getLocation().getX();
+				int x = (int) current.getLocation().getY();
+				if (y == 4)
+					throw new UnallowedMovementException();
+				else if (board[y][x] == null) {
+					board[y + 1][x] = current;
+					board[y][x] = null;
+					current.setLocation(new Point(y + 1, x));
+					current.setCurrentActionPoints(current.getCurrentActionPoints()-1);
+				} else
+					throw new UnallowedMovementException();
+			case DOWN:
+				int yD = (int) current.getLocation().getX();
+				int xD= (int) current.getLocation().getY();
+				if (yD == 0)
+					throw new UnallowedMovementException();
+				else if (board[yD][xD] == null) {
+					board[yD - 1][xD] = current;
+					board[yD][xD] = null;
+					current.setLocation(new Point(yD -1, xD));
+					current.setCurrentActionPoints(current.getCurrentActionPoints()-1);
+				} else
+					throw new UnallowedMovementException();
+			case LEFT:
+				int yL = (int) current.getLocation().getX();
+				int xL= (int) current.getLocation().getY();
+				if (xL == 0)
+					throw new UnallowedMovementException();
+				else if (board[yL][xL] == null) {
+					board[yL ][xL-1] = current;
+					board[yL][xL] = null;
+					current.setLocation(new Point(yL, xL-1));
+					current.setCurrentActionPoints(current.getCurrentActionPoints()-1);
+				} else
+					throw new UnallowedMovementException();
+			case RIGHT:
+				int yR = (int) current.getLocation().getX();
+				int xR= (int) current.getLocation().getY();
+				if (xR == 4)
+					throw new UnallowedMovementException();
+				else if (board[yR][xR] == null) {
+					board[yR][xR+1] = current;
+					board[yR][xR] = null;
+					current.setLocation(new Point(yR, xR+1));
+					current.setCurrentActionPoints(current.getCurrentActionPoints()-1);
+				} else
+					throw new UnallowedMovementException();
+			}
+
+		}
+	}
+	
+	
+	
+	
+	public Champion getCurrentChampion() {
+		return (Champion)turnOrder.peekMin();
+	}
+
+	public Player checkGameOver() {
+		int f = 0;
+		int s = 0;
+		for (int i = 0; i < 3; i++) {
+
+			if (firstPlayer.getTeam().get(i).getCondition() == Condition.KNOCKEDOUT)
+				f++;
+		}
+		if (f == 3)
+			return secondPlayer;
+		for (int i = 0; i < 3; i++) {
+			if (secondPlayer.getTeam().get(i).getCondition() == Condition.KNOCKEDOUT)
+				s++;
+		}
+		if (s == 3)
+			return firstPlayer;
+		return null;
 	}
 
 	public static void loadAbilities(String filePath) throws IOException {
