@@ -29,6 +29,7 @@ import model.world.AntiHero;
 import model.world.Champion;
 import model.world.Condition;
 import model.world.Cover;
+import model.world.Damageable;
 import model.world.Direction;
 import model.world.Hero;
 import model.world.Villain;
@@ -55,7 +56,7 @@ public class Game {
 		turnOrder = new PriorityQueue(6);
 		placeChampions();
 		placeCovers();
-		for(int i=0; i<3;i++) {
+		for (int i = 0; i < 3; i++) {
 			turnOrder.insert(firstPlayer.getTeam().get(i));
 			turnOrder.insert(secondPlayer.getTeam().get(i));
 		}
@@ -80,43 +81,43 @@ public class Game {
 					board[y + 1][x] = current;
 					board[y][x] = null;
 					current.setLocation(new Point(y + 1, x));
-					current.setCurrentActionPoints(current.getCurrentActionPoints()-1);
+					current.setCurrentActionPoints(current.getCurrentActionPoints() - 1);
 				} else
 					throw new UnallowedMovementException();
 			case DOWN:
 				int yD = (int) current.getLocation().getX();
-				int xD= (int) current.getLocation().getY();
+				int xD = (int) current.getLocation().getY();
 				if (yD == 0)
 					throw new UnallowedMovementException();
 				else if (board[yD][xD] == null) {
 					board[yD - 1][xD] = current;
 					board[yD][xD] = null;
-					current.setLocation(new Point(yD -1, xD));
-					current.setCurrentActionPoints(current.getCurrentActionPoints()-1);
+					current.setLocation(new Point(yD - 1, xD));
+					current.setCurrentActionPoints(current.getCurrentActionPoints() - 1);
 				} else
 					throw new UnallowedMovementException();
 			case LEFT:
 				int yL = (int) current.getLocation().getX();
-				int xL= (int) current.getLocation().getY();
+				int xL = (int) current.getLocation().getY();
 				if (xL == 0)
 					throw new UnallowedMovementException();
 				else if (board[yL][xL] == null) {
-					board[yL ][xL-1] = current;
+					board[yL][xL - 1] = current;
 					board[yL][xL] = null;
-					current.setLocation(new Point(yL, xL-1));
-					current.setCurrentActionPoints(current.getCurrentActionPoints()-1);
+					current.setLocation(new Point(yL, xL - 1));
+					current.setCurrentActionPoints(current.getCurrentActionPoints() - 1);
 				} else
 					throw new UnallowedMovementException();
 			case RIGHT:
 				int yR = (int) current.getLocation().getX();
-				int xR= (int) current.getLocation().getY();
+				int xR = (int) current.getLocation().getY();
 				if (xR == 4)
 					throw new UnallowedMovementException();
 				else if (board[yR][xR] == null) {
-					board[yR][xR+1] = current;
+					board[yR][xR + 1] = current;
 					board[yR][xR] = null;
-					current.setLocation(new Point(yR, xR+1));
-					current.setCurrentActionPoints(current.getCurrentActionPoints()-1);
+					current.setLocation(new Point(yR, xR + 1));
+					current.setCurrentActionPoints(current.getCurrentActionPoints() - 1);
 				} else
 					throw new UnallowedMovementException();
 			}
@@ -124,11 +125,214 @@ public class Game {
 		}
 	}
 	
+	public void castAbility(Ability a) /// not finished
+	{
+		Champion curr = this.getCurrentChampion();
+		int x = (int) curr.getLocation().getY();
+		int y = (int) curr.getLocation().getX();
+		ArrayList<Damageable> targets = new ArrayList<Damageable>();
+		if(board[y+1][x] != null)
+		{
+			targets.add((Damageable) board[y+1][x]);
+		}
+		
+		a.execute(targets);
+	}
 	
-	
-	
+
+	public void attack(Direction d) throws GameActionException {
+		Champion c = this.getCurrentChampion();
+		boolean isHero = false;
+		boolean isVillain = false;
+		boolean isAnti = false;
+		if(c instanceof Hero)
+		{
+			isHero = true;
+		}
+		else if(c instanceof Villain)
+		{
+			isVillain = true;
+		}
+		else
+			isAnti = true;
+		int range = c.getAttackRange();
+		int dmg = c.getAttackDamage();
+		int y = (int) c.getLocation().getX();
+		int x = (int) c.getLocation().getY();
+		Cover attackedC = null;
+		Champion attackedCH = null;
+		if (c.getCurrentActionPoints() < 2) {
+			
+			throw new NotEnoughResourcesException();
+			
+		} else {
+			c.setCurrentActionPoints(c.getCurrentActionPoints() - 2);
+			int attackedX =-1;  // HABDA ??????
+			int attackedY =-1;
+			switch(d) {
+			case UP:
+				
+				for(int i = y+1;i <= (range+y) && i<5;i++)
+				{
+					if (board[i][x] != null)
+					{
+						if(board[i][x] instanceof Cover) {
+							attackedC = (Cover) board[i][x];
+							attackedY = i;
+							attackedX = x;
+						}
+						else if(board[i][x] instanceof Champion) {
+							attackedCH = (Champion) board[i][x];
+							attackedY = i;
+							attackedX = x;
+						}
+						if((attackedCH != null && attackedCH.getCondition() != Condition.KNOCKEDOUT) || attackedC != null) /////////// mynfa3sh a attack if knockedout bas ????
+						{
+							break;
+						}
+						else {
+							attackedCH = null;
+							attackedX =-1;  // HABDA ??????
+						    attackedY =-1;
+						}
+					}
+				}
+			case DOWN:
+				
+				for(int i = y-1;(i >= (4-range)) && i>=0;i--) //// NOT SURE 5ALES
+				{
+					if (board[i][x] != null)
+					{
+						if(board[i][x] instanceof Cover) {
+							attackedC = (Cover) board[i][x];
+							attackedY = i;
+							attackedX = x;
+						}
+						else if(board[i][x] instanceof Champion) {
+							attackedCH = (Champion) board[i][x];
+							attackedY = i;
+							attackedX = x;
+						}
+						if((attackedCH != null && attackedCH.getCondition() != Condition.KNOCKEDOUT) || attackedC != null) /////////// mynfa3sh a attack if knockedout bas ????
+						{
+							break;
+						}
+						else {
+							attackedCH = null;
+							 attackedX =-1;  // HABDA ??????
+							 attackedY =-1;
+						}
+					}
+				}
+			case RIGHT:
+				for(int i = x+1;i <= (range+x) && i<5;i++) 
+				{
+					if (board[y][i] != null)
+					{
+						if(board[y][i] instanceof Cover) {
+							attackedC = (Cover) board[y][i];
+							attackedY = y;
+							attackedX = i;
+						}
+						else if(board[y][i] instanceof Champion) {
+							attackedCH = (Champion) board[y][i];
+							attackedY = y;
+							attackedX = i;
+						}
+						if((attackedCH != null && attackedCH.getCondition() != Condition.KNOCKEDOUT) || attackedC != null) /////////// mynfa3sh a attack if knockedout bas ????
+						{
+							break;
+						}
+						else {
+							attackedCH = null;
+							 attackedX =-1;  // HABDA ??????
+							 attackedY =-1;
+						}
+					}
+				}
+				
+			case LEFT:
+				
+				for(int i = x-1;(i >= (4-range)) && i>=0;i--) 
+				{
+					if (board[y][i] != null)
+					{
+						if(board[y][i] instanceof Cover) {
+							attackedC = (Cover) board[y][i];
+							attackedY = y;
+							attackedX = i;
+						}
+						else if(board[y][i] instanceof Champion) {
+							attackedCH = (Champion) board[y][i];
+							attackedY = y;
+							attackedX = i;
+						}
+						if((attackedCH != null && attackedCH.getCondition() != Condition.KNOCKEDOUT) || attackedC != null) /////////// mynfa3sh a attack if knockedout bas ????
+						{
+							break;
+						}
+						else {
+							attackedCH = null;
+							 attackedX =-1;  // HABDA ??????
+							 attackedY =-1;
+						}
+					}
+				}
+				
+				
+				
+			}
+			if(attackedC != null)
+			{
+				attackedC.setCurrentHP(attackedC.getCurrentHP()-c.getAttackDamage());
+				if(attackedC.getCurrentHP() == 0)
+				{
+					board[attackedY][attackedX] = null;
+				}
+				
+			}
+			else if(attackedCH != null)
+			{
+				if (isHero) {
+					if (attackedCH instanceof Hero) {
+						attackedCH.setCurrentHP(attackedCH.getCurrentHP() - dmg);
+					}
+					else {
+						attackedCH.setCurrentHP((int)(attackedCH.getCurrentHP() - (dmg * 1.5)));
+					}
+
+				}
+				else if (isVillain) {
+					if (attackedCH instanceof Villain) {
+						attackedCH.setCurrentHP(attackedCH.getCurrentHP() - dmg);
+					}
+					else {
+						attackedCH.setCurrentHP((int)(attackedCH.getCurrentHP() - (dmg * 1.5)));
+					}
+
+				}
+				else {
+					if (isHero) {
+						if (attackedCH instanceof AntiHero) {
+							attackedCH.setCurrentHP(attackedCH.getCurrentHP() - dmg);
+						}
+						else {
+							attackedCH.setCurrentHP((int)(attackedCH.getCurrentHP() - (dmg * 1.5)));
+						}
+
+					}
+				}
+				if(attackedCH.getCurrentHP() == 0)
+				{
+					attackedCH.setCondition(Condition.KNOCKEDOUT);
+					board[attackedY][attackedX] = null;
+				}
+			}
+		}
+	}
+
 	public Champion getCurrentChampion() {
-		return (Champion)turnOrder.peekMin();
+		return (Champion) turnOrder.peekMin();
 	}
 
 	public Player checkGameOver() {
@@ -299,7 +503,7 @@ public class Game {
 			c.setLocation(new Point(BOARDHEIGHT - 1, i));
 			i++;
 		}
-	
+
 	}
 
 	public static ArrayList<Champion> getAvailableChampions() {
