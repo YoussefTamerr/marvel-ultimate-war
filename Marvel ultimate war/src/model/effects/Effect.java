@@ -12,6 +12,11 @@ public abstract class Effect implements Cloneable {
 		this.type = type;
 		this.duration = duration;
 	}
+	
+	public Object clone() throws CloneNotSupportedException { //// revise
+		return super.clone();
+		
+	}
 
 	public String getName() {
 		return name;

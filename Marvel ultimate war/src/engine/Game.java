@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Stack;
 
 import exceptions.ChampionDisarmedException;
 import exceptions.GameActionException;
@@ -84,7 +85,7 @@ public class Game {
 				int x = (int) current.getLocation().getY();
 				if (y == 4)
 					throw new UnallowedMovementException();
-				else if (board[y][x] == null) {
+				else if (board[y + 1][x] == null) {
 					board[y + 1][x] = current;
 					board[y][x] = null;
 					current.setLocation(new Point(y + 1, x));
@@ -96,7 +97,7 @@ public class Game {
 				int xD = (int) current.getLocation().getY();
 				if (yD == 0)
 					throw new UnallowedMovementException();
-				else if (board[yD][xD] == null) {
+				else if (board[yD - 1][xD] == null) {
 					board[yD - 1][xD] = current;
 					board[yD][xD] = null;
 					current.setLocation(new Point(yD - 1, xD));
@@ -108,7 +109,7 @@ public class Game {
 				int xL = (int) current.getLocation().getY();
 				if (xL == 0)
 					throw new UnallowedMovementException();
-				else if (board[yL][xL] == null) {
+				else if (board[yL][xL - 1] == null) {
 					board[yL][xL - 1] = current;
 					board[yL][xL] = null;
 					current.setLocation(new Point(yL, xL - 1));
@@ -120,7 +121,7 @@ public class Game {
 				int xR = (int) current.getLocation().getY();
 				if (xR == 4)
 					throw new UnallowedMovementException();
-				else if (board[yR][xR] == null) {
+				else if (board[yR][xR + 1] == null) {
 					board[yR][xR + 1] = current;
 					board[yR][xR] = null;
 					current.setLocation(new Point(yR, xR + 1));
@@ -314,6 +315,7 @@ public class Game {
 					if(attackedCH.getAppliedEffects().get(i) instanceof Shield)
 					{
 						isShield = true;
+						attackedCH.getAppliedEffects().remove(i);
 						break;
 					}
 					else if(attackedCH.getAppliedEffects().get(i) instanceof Dodge)
@@ -350,7 +352,6 @@ public class Game {
 
 				}
 				else {
-					if (isHero) {
 						if (attackedCH instanceof AntiHero) {
 							attackedCH.setCurrentHP(attackedCH.getCurrentHP() - dmg);
 						}
@@ -358,15 +359,27 @@ public class Game {
 							attackedCH.setCurrentHP((int)(attackedCH.getCurrentHP() - (dmg * 1.5)));
 						}
 
-					}
+					
 				}
 				if(attackedCH.getCurrentHP() == 0)
 				{
 					attackedCH.setCondition(Condition.KNOCKEDOUT);
 					board[attackedY][attackedX] = null;
+					Stack<Comparable> temp = new Stack<Comparable>();
+					for(int i =0; i< turnOrder.size(); i++)
+					{
+						if(turnOrder.peekMin() != attackedCH) {
+							temp.add(turnOrder.remove());
+						}
+						turnOrder.remove();
+					}
+					while(!temp.isEmpty()) {
+						turnOrder.insert(temp.pop());
+					}
 				}
 			}
 		}
+			
 	}
 	
 	
@@ -374,7 +387,7 @@ public class Game {
 		Champion c = this.getCurrentChampion();
 		if (this.getFirstPlayer().getLeader() != c && this.getSecondPlayer().getLeader() != c)
 			throw new LeaderNotCurrentException();
-		else if (this.firstLeaderAbilityUsed && this.secondLeaderAbilityUsed)
+		else if ((this.getFirstPlayer().getLeader()==c && firstLeaderAbilityUsed) || (this.getSecondPlayer().getLeader() == c && secondLeaderAbilityUsed))
 			throw new LeaderAbilityAlreadyUsedException();
 		else {
 			ArrayList<Champion> targets = new ArrayList<Champion>();
@@ -440,11 +453,12 @@ public class Game {
 			c.setCurrentActionPoints(c.getMaxActionPointsPerTurn());
 			for(int i =0; i<c.getAbilities().size();i++)
 			{
-				c.getAbilities().get(i).setCurrentCooldown(c.getAbilities().get(i).getBaseCooldown()); //// revise
+				c.getAbilities().get(i).setCurrentCooldown(c.getAbilities().get(i).getCurrentCooldown() - 1); //// revise
 			}
 			for(int i = 0; i< c.getAppliedEffects().size();i++)
 			{
-				c.getAppliedEffects().remove(i); //////revise
+				c.getAppliedEffects().get(i).setDuration(c.getAppliedEffects().get(i).getDuration() - 1);; //////revise
+				
 			}
 		}
 	}

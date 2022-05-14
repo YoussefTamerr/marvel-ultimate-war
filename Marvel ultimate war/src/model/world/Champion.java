@@ -45,9 +45,9 @@ public abstract class Champion implements Damageable, Comparable {
 			return -1;
 		else if(this.speed < c.speed)
 			return 1;
-		else if (this.getName().charAt(0) < c.getName().charAt(0))
+		else if (this.getName().compareTo(c.getName()) < 0)
 			return -1;
-		else if(this.getName().charAt(0) > c.getName().charAt(0))
+		else if(this.getName().compareTo(c.getName()) > 0)
 			return 1;
 		else 
 			return 0;
