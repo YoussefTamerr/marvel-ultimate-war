@@ -6,7 +6,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import exceptions.ChampionDisarmedException;
 import exceptions.GameActionException;
+import exceptions.LeaderAbilityAlreadyUsedException;
+import exceptions.LeaderNotCurrentException;
 import exceptions.NotEnoughResourcesException;
 import exceptions.UnallowedMovementException;
 import model.abilities.Ability;
@@ -64,8 +67,12 @@ public class Game {
 
 	public void move(Direction d) throws GameActionException {
 		Champion current = this.getCurrentChampion();
+		
+		if(current.getCondition() != Condition.ACTIVE) { //// keep it like this or check appliedEffects arrayList ????
+			throw new UnallowedMovementException();
+		}
 
-		if (current.getCurrentActionPoints() < 1) {
+		else if (current.getCurrentActionPoints() < 1) {
 
 			throw new NotEnoughResourcesException();
 		} else {
@@ -161,6 +168,13 @@ public class Game {
 		int x = (int) c.getLocation().getY();
 		Cover attackedC = null;
 		Champion attackedCH = null;
+		for(int i = 0; i<c.getAppliedEffects().size(); i++)
+		{
+			if(c.getAppliedEffects().get(i) instanceof Disarm)
+			{
+				throw new ChampionDisarmedException();
+			}
+		}
 		if (c.getCurrentActionPoints() < 2) {
 			
 			throw new NotEnoughResourcesException();
@@ -293,6 +307,30 @@ public class Game {
 			}
 			else if(attackedCH != null)
 			{
+				boolean isShield = false;
+				boolean isDodge = false;
+				for(int i =0;i<attackedCH.getAppliedEffects().size();i++)
+				{
+					if(attackedCH.getAppliedEffects().get(i) instanceof Shield)
+					{
+						isShield = true;
+						break;
+					}
+					else if(attackedCH.getAppliedEffects().get(i) instanceof Dodge)
+					{
+						isDodge = true;
+						break;
+					}
+				}
+				if(isShield)
+				{
+					dmg = 0;
+				}
+				if(isDodge)
+				{
+					if(Math.random() < 0.5)
+						dmg = 0;
+				}
 				if (isHero) {
 					if (attackedCH instanceof Hero) {
 						attackedCH.setCurrentHP(attackedCH.getCurrentHP() - dmg);
@@ -330,6 +368,98 @@ public class Game {
 			}
 		}
 	}
+	
+	
+	public void useLeaderAbility() throws GameActionException {
+		Champion c = this.getCurrentChampion();
+		if (this.getFirstPlayer().getLeader() != c && this.getSecondPlayer().getLeader() != c)
+			throw new LeaderNotCurrentException();
+		else if (this.firstLeaderAbilityUsed && this.secondLeaderAbilityUsed)
+			throw new LeaderAbilityAlreadyUsedException();
+		else {
+			ArrayList<Champion> targets = new ArrayList<Champion>();
+			if (c instanceof Hero) {
+				if (this.getFirstPlayer().getLeader() == c) {
+					{
+						for (int i = 0; i < 3; i++) {
+							if (this.getFirstPlayer().getTeam().get(i).getCondition() != Condition.KNOCKEDOUT) {
+								targets.add(this.getFirstPlayer().getTeam().get(i));
+							}
+						}
+					}
+				} else if (this.getSecondPlayer().getLeader() == c) {
+					for (int i = 0; i < 3; i++) {
+						if (this.getSecondPlayer().getTeam().get(i).getCondition() != Condition.KNOCKEDOUT) {
+							targets.add(this.getSecondPlayer().getTeam().get(i));
+						}
+					}
+
+				}
+			}
+			else if(c instanceof Villain) {
+				for(int i = 0; i<3; i++)
+				{
+					if (this.getFirstPlayer().getTeam().get(i).getCondition() != Condition.KNOCKEDOUT) {
+						targets.add(this.getFirstPlayer().getTeam().get(i));
+					}
+					if (this.getSecondPlayer().getTeam().get(i).getCondition() != Condition.KNOCKEDOUT) {
+						targets.add(this.getSecondPlayer().getTeam().get(i));
+					}
+				}
+			}
+			else {
+				for(int i = 0; i<3; i++)
+				{
+					if ((this.getFirstPlayer().getTeam().get(i).getCondition() != Condition.KNOCKEDOUT) && (this.getFirstPlayer().getTeam().get(i) != this.getFirstPlayer().getLeader())) {
+						targets.add(this.getFirstPlayer().getTeam().get(i));
+					}
+					if ((this.getSecondPlayer().getTeam().get(i).getCondition() != Condition.KNOCKEDOUT) && (this.getSecondPlayer().getTeam().get(i) != this.getSecondPlayer().getLeader())) {
+						targets.add(this.getSecondPlayer().getTeam().get(i));
+					}
+				}
+				
+			}
+			
+			c.useLeaderAbility(targets);
+			
+		}
+	}
+	
+	public void endTurn() { // do not understand whether to return the inactive champions to the turnorder or not
+		turnOrder.remove();
+		if(turnOrder.isEmpty()) {
+			prepareChampionTurns();
+		}
+		else {
+			ArrayList<Object> temp = new ArrayList<Object>();
+			Champion c = (Champion) turnOrder.peekMin();
+			while(c.getCondition() != Condition.ACTIVE) {
+				temp.add(turnOrder.remove());
+				c = (Champion) turnOrder.peekMin();
+			}
+			c.setCurrentActionPoints(c.getMaxActionPointsPerTurn());
+			for(int i =0; i<c.getAbilities().size();i++)
+			{
+				c.getAbilities().get(i).setCurrentCooldown(c.getAbilities().get(i).getBaseCooldown()); //// revise
+			}
+			for(int i = 0; i< c.getAppliedEffects().size();i++)
+			{
+				c.getAppliedEffects().remove(i); //////revise
+			}
+		}
+	}
+	
+	 private void prepareChampionTurns() {
+		 for(int i = 0; i<3; i++)
+		 {
+			 if(this.getFirstPlayer().getTeam().get(i).getCondition() != Condition.KNOCKEDOUT) {
+				 turnOrder.insert(this.getFirstPlayer().getTeam().get(i));
+			 }
+			 if(this.getSecondPlayer().getTeam().get(i).getCondition() != Condition.KNOCKEDOUT) {
+				 turnOrder.insert(this.getSecondPlayer().getTeam().get(i));
+			 }
+		 }
+	 }
 
 	public Champion getCurrentChampion() {
 		return (Champion) turnOrder.peekMin();
