@@ -4,7 +4,7 @@ public class LeaderNotCurrentException extends  GameActionException {
 	public LeaderNotCurrentException() {
 		super();
 	}
-	LeaderNotCurrentException(String s){
+	public LeaderNotCurrentException(String s){
 		super(s);
 	}
 }

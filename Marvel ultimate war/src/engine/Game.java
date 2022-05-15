@@ -67,7 +67,7 @@ public class Game {
 		}
 	}
 
-	public void move(Direction d) throws GameActionException {
+	public void move(Direction d) throws UnallowedMovementException, NotEnoughResourcesException {
 		Champion current = this.getCurrentChampion();
 		
 		if(current.getCondition() != Condition.ACTIVE) { //// keep it like this or check appliedEffects arrayList ????
@@ -134,7 +134,9 @@ public class Game {
 		}
 	}
 	
-	public void castAbility(Ability a) throws GameActionException/// not finished me7tag kol ability wa crowd wa wa1st
+	public void castAbility(Ability a) throws CloneNotSupportedException /// not finished me7tag kol ability wa crowd wa wa1st
+, NotEnoughResourcesException
+
 	// waqla 2nd player champion SINGLETARGET, TEAMTARGET damaging wala
 	// heaaling,DIRECTIONAL,SELFTARGET,SURROUND; damaging wala heaaling contains
 	// boolean
@@ -161,8 +163,9 @@ public class Game {
 
 		switch (a.getCastArea()) {
 		case TEAMTARGET:
-			if (a.getRequiredActionPoints() >= c.getCurrentActionPoints()) {
-				c.setCurrentActionPoints(a.getRequiredActionPoints() - c.getCurrentActionPoints());
+			if (a.getRequiredActionPoints() <= c.getCurrentActionPoints()&& a.getManaCost()<=c.getMana()) {
+				c.setCurrentActionPoints( c.getCurrentActionPoints()- a.getRequiredActionPoints());
+				c.setMana(c.getMana()-a.getManaCost());
 				if (a instanceof CrowdControlAbility) {
 					CrowdControlAbility ac = (CrowdControlAbility) a;
 					if (ac.getEffect().getType() == EffectType.DEBUFF) {
@@ -177,9 +180,9 @@ public class Game {
 										if (secondPlayer.getTeam().get(i).getAppliedEffects()
 												.get(j) instanceof Shield) {
 											flag = true;
-											secondPlayer.getTeam().get(i).getAppliedEffects().get(j)
+											secondPlayer.getTeam().get(i).getAppliedEffects().get(j)// bagib el effect wa ba call el remove el fi subclass bta3 effect wa badiha el champion el 3ayz a removo
 													.remove(secondPlayer.getTeam().get(i));
-											secondPlayer.getTeam().get(i).getAppliedEffects().remove(j);
+											secondPlayer.getTeam().get(i).getAppliedEffects().remove(j);// bayshil el effect nafso men applied effect
 										}
 									}
 									if (flag == false) {
@@ -321,19 +324,19 @@ public class Game {
 
 					}
 				}
-
 			} else {
 				throw new NotEnoughResourcesException();
 			}
 		case SELFTARGET:
-			if (a.getRequiredActionPoints() >= c.getCurrentActionPoints()) {
-				c.setCurrentActionPoints(a.getRequiredActionPoints() - c.getCurrentActionPoints());
+			if (a.getRequiredActionPoints() <= c.getCurrentActionPoints()&& a.getManaCost()<=c.getMana()) {
+				c.setCurrentActionPoints( c.getCurrentActionPoints()- a.getRequiredActionPoints());
+				c.setMana(c.getMana()-a.getManaCost());
 				e.add(c);
 				a.execute(e);
 			} else
 				throw new NotEnoughResourcesException();
 		case SURROUND:
-			if (a.getRequiredActionPoints() >= c.getCurrentActionPoints()) {
+			if (a.getRequiredActionPoints() <= c.getCurrentActionPoints() && a.getManaCost()<=c.getMana()) {
 				c.setCurrentActionPoints(a.getRequiredActionPoints() - c.getCurrentActionPoints());
 				if (a instanceof CrowdControlAbility) {
 					CrowdControlAbility ac = (CrowdControlAbility) a;
@@ -383,32 +386,12 @@ public class Game {
 									} else {
 										flag = false;
 										if (firstPlayer.getTeam().contains(c) && firstPlayer.getTeam().contains(CH)) {
-											for (int k = 0; k < firstPlayer.getTeam().get(i).getAppliedEffects()
-													.size(); i++) {
-												if (firstPlayer.getTeam().get(i).getAppliedEffects()
-														.get(k) instanceof Shield) {
-													flag = true;
-													firstPlayer.getTeam().get(i).getAppliedEffects().get(k)
-															.remove(firstPlayer.getTeam().get(i));// bagib el effect wa ba call el remove el fi subclass bta3 effect wa badiha el champion el 3ayz a removo
-													firstPlayer.getTeam().get(i).getAppliedEffects().remove(k);// bayshil el effect nafso men applied effect
-												}
-											}
 											if (flag == false) {
 												teammem = firstPlayer.getTeam().get(i);
 												e.add(teammem);
 											}
 										}
 										if (secondPlayer.getTeam().contains(c) && secondPlayer.getTeam().contains(CH)) {
-											for (int k = 0; k < secondPlayer.getTeam().get(i).getAppliedEffects()
-													.size(); i++) {
-												if (secondPlayer.getTeam().get(i).getAppliedEffects()
-														.get(k) instanceof Shield) {
-													flag = true;
-													secondPlayer.getTeam().get(i).getAppliedEffects().get(k)
-															.remove(secondPlayer.getTeam().get(i));
-													secondPlayer.getTeam().get(i).getAppliedEffects().remove(k);
-												}
-											}
 											if (flag == false) {
 												teammem = secondPlayer.getTeam().get(i);
 												e.add(teammem);
@@ -450,7 +433,7 @@ public class Game {
 								if (board[j][i] instanceof Champion) {
 									CH = (Champion) board[j][i];
 									flag = false;
-									if (firstPlayer.getTeam().contains(c) && secondPlayer.getTeam().contains(CH)) {
+									if (firstPlayer.getTeam().contains(c) && secondPlayer.getTeam().contains(CH)){
 										for (int k = 0; k < secondPlayer.getTeam().get(i).getAppliedEffects()
 												.size(); i++) {
 											if (secondPlayer.getTeam().get(i).getAppliedEffects()
@@ -483,25 +466,25 @@ public class Game {
 											e.add(teammem);
 										}
 									}
-								 else if (board[j][i] instanceof Cover) {
-								C = (Cover) board[j][i];
-								e.add(C);
-							}
-									a.execute(e);
+									
 									}
+								 else if (board[j][i] instanceof Cover) {
+										C = (Cover) board[j][i];
+										e.add(C);
+									}
+								a.execute(e);
 							}
 						}
 					}
 				}
 			}
 			else throw  new NotEnoughResourcesException();
-
 		}
 	
 	}
 	
 
-	public void attack(Direction d) throws GameActionException {
+	public void attack(Direction d) throws ChampionDisarmedException, NotEnoughResourcesException  {
 		Champion c = this.getCurrentChampion();
 		boolean isHero = false;
 		boolean isVillain = false;
@@ -736,7 +719,7 @@ public class Game {
 	}
 	
 	
-	public void useLeaderAbility() throws GameActionException {
+	public void useLeaderAbility() throws LeaderNotCurrentException, LeaderAbilityAlreadyUsedException  {
 		Champion c = this.getCurrentChampion();
 		if (this.getFirstPlayer().getLeader() != c && this.getSecondPlayer().getLeader() != c)
 			throw new LeaderNotCurrentException();
