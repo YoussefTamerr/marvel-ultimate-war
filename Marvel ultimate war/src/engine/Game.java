@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
 
+import exceptions.AbilityUseException;
 import exceptions.ChampionDisarmedException;
 import exceptions.GameActionException;
+import exceptions.InvalidTargetException;
 import exceptions.LeaderAbilityAlreadyUsedException;
 import exceptions.LeaderNotCurrentException;
 import exceptions.NotEnoughResourcesException;
@@ -138,358 +140,542 @@ public class Game {
 		}
 
 	}
-	
+	public void castAbility(Ability a) throws CloneNotSupportedException , NotEnoughResourcesException, AbilityUseException
+	/// not finished me7tag kol ability wa crowd wa
+	/// wa1st
+// waqla 2nd player champion SINGLETARGET, TEAMTARGET damaging wala
+// heaaling,DIRECTIONAL,SELFTARGET,SURROUND; damaging wala heaaling contains
+// boolean
+// wa est5dam el cast range fa el manhatten x1 da ana x0 da eli la2ito
+// int distance = Math.abs(x1-x0) + Math.abs(y1-y0); a7sab el distanse ma beny
+// wa bein el pont wa hal 2a2al men el cast range team target wa self target wa
+// surround
+// firstPlayer.getteam hal wa single mediny x wa y ##shield
+// law cc mat3malsh 7aga la cover
+// law ha dont heal cover
+// law da damage cover 3ady
+{
+Champion c = this.getCurrentChampion();
+Champion teammem = null;
+ArrayList<Damageable> e = new ArrayList<Damageable>();
+int range = a.getCastRange();
 
-	public void castAbility(Ability a) throws CloneNotSupportedException /// not finished me7tag kol ability wa crowd wa
-																			/// wa1st
-			, NotEnoughResourcesException
+int y = (int) c.getLocation().getX();
+int x = (int) c.getLocation().getY();
+// Champion attackedCH = null;
+// int attackedX = -1;
+// int attackedY = -1;
+int distance = 0;
+if(a.getManaCost() > c.getMana()) {
+	throw new AbilityUseException();
+}
+for (int j = 0; j < c.getAppliedEffects().size(); j++) {
+	if (c.getAppliedEffects().get(j) instanceof Silence) {
+		throw new AbilityUseException();
+	}}
+if(a.getCastArea()== AreaOfEffect.DIRECTIONAL ||a.getCastArea()== AreaOfEffect.SINGLETARGET) {
+	throw new AbilityUseException();
+}
 
-	// waqla 2nd player champion SINGLETARGET, TEAMTARGET damaging wala
-	// heaaling,DIRECTIONAL,SELFTARGET,SURROUND; damaging wala heaaling contains
-	// boolean
-	// wa est5dam el cast range fa el manhatten x1 da ana x0 da eli la2ito
-	// int distance = Math.abs(x1-x0) + Math.abs(y1-y0); a7sab el distanse ma beny
-	// wa bein el pont wa hal 2a2al men el cast range team target wa self target wa
-	// surround
-	// firstPlayer.getteam hal wa single mediny x wa y ##shield
-	// law cc mat3malsh 7aga la cover
-	// law ha dont heal cover
-	// law da damage cover 3ady
-	{
-		Champion c = this.getCurrentChampion();
-		Champion teammem = null;
-		ArrayList<Damageable> e = new ArrayList<Damageable>();
-		int range = a.getCastRange();
-
-		int y = (int) c.getLocation().getX();
-		int x = (int) c.getLocation().getY();
-		// Champion attackedCH = null;
-		// int attackedX = -1;
-		// int attackedY = -1;
-		int distance = 0;
-
-		switch (a.getCastArea()) {
-		case TEAMTARGET:
-			if (a.getRequiredActionPoints() <= c.getCurrentActionPoints() && a.getManaCost() <= c.getMana()) {
-				c.setCurrentActionPoints(c.getCurrentActionPoints() - a.getRequiredActionPoints());
-				c.setMana(c.getMana() - a.getManaCost());
-				if (a instanceof CrowdControlAbility) {
-					CrowdControlAbility ac = (CrowdControlAbility) a;
-					if (ac.getEffect().getType() == EffectType.DEBUFF) {
-						if (firstPlayer.getTeam().contains(c)) {
-							for (int i = 0; i < secondPlayer.getTeam().size(); i++) {
-								int xs = (int) secondPlayer.getTeam().get(i).getLocation().getY();
-								int ys = (int) secondPlayer.getTeam().get(i).getLocation().getX();
-								distance = Math.abs(x - xs) + Math.abs(y - ys);
-								boolean flag = false;
-								if (distance <= range) {
-									for (int j = 0; j < secondPlayer.getTeam().get(i).getAppliedEffects().size(); i++) {
-										if (secondPlayer.getTeam().get(i).getAppliedEffects().get(j) instanceof Shield) {
-											flag = true;
-											secondPlayer.getTeam().get(i).getAppliedEffects().get(j).remove(secondPlayer.getTeam().get(i)); //bageeb el effect then call the remove in subclass effect and put champion
-											secondPlayer.getTeam().get(i).getAppliedEffects().remove(j);// bayshil el effect nafso men appled effect
-										}
-									}
-									if (flag == false) {
-										teammem = secondPlayer.getTeam().get(i);
-										e.add(teammem);
-									}
+switch (a.getCastArea()) {
+case TEAMTARGET:
+	if (a.getRequiredActionPoints() <= c.getCurrentActionPoints() && a.getManaCost() <= c.getMana()) {
+		c.setCurrentActionPoints(c.getCurrentActionPoints() - a.getRequiredActionPoints());
+		c.setMana(c.getMana() - a.getManaCost());
+		if (a instanceof CrowdControlAbility) {
+			CrowdControlAbility ac = (CrowdControlAbility) a;
+			if (ac.getEffect().getType() == EffectType.DEBUFF) {
+				if (firstPlayer.getTeam().contains(c)) {
+					for (int i = 0; i < secondPlayer.getTeam().size(); i++) {
+						int xs = (int) secondPlayer.getTeam().get(i).getLocation().getY();
+						int ys = (int) secondPlayer.getTeam().get(i).getLocation().getX();
+						distance = Math.abs(x - xs) + Math.abs(y - ys);
+						boolean flag = false;
+						if (distance <= range) {
+							for (int j = 0; j < secondPlayer.getTeam().get(i).getAppliedEffects().size(); j++) {
+								if (secondPlayer.getTeam().get(i).getAppliedEffects()
+										.get(j) instanceof Shield) {
+									flag = true;
+									secondPlayer.getTeam().get(i).getAppliedEffects().get(j)// bagib el effect
+																							// wa ba call el
+																							// remove el fi
+																							// subclass bta3
+																							// effect wa badiha
+																							// el champion el
+																							// 3ayz a removo
+											.remove(secondPlayer.getTeam().get(i));
+									secondPlayer.getTeam().get(i).getAppliedEffects().remove(j);// bayshil el
+																								// effect nafso
+																								// men applied
+																								// effect
 								}
 							}
-							a.execute(e);
-						} else {
-							for (int i = 0; i < firstPlayer.getTeam().size(); i++) {
-								int xs = (int) firstPlayer.getTeam().get(i).getLocation().getY();
-								int ys = (int) firstPlayer.getTeam().get(i).getLocation().getX();
-								distance = Math.abs(x - xs) + Math.abs(y - ys);
-								boolean flag = false;
-								if (distance <= range) {
-									for (int j = 0; j < firstPlayer.getTeam().get(i).getAppliedEffects().size(); i++) {
-										if (firstPlayer.getTeam().get(i).getAppliedEffects().get(j) instanceof Shield) {
-											flag = true;
-											firstPlayer.getTeam().get(i).getAppliedEffects().get(j)
-													.remove(firstPlayer.getTeam().get(i));
-											firstPlayer.getTeam().get(i).getAppliedEffects().remove(j);
-										}
-									}
-									if (flag == false) {
-										teammem = firstPlayer.getTeam().get(i);
-										e.add(teammem);
-									}
-								}
-								a.execute(e);// ta2riban mara wa7da bas eli tetkatb
-							}
-						}
-					} else {
-						if (firstPlayer.getTeam().contains(c)) {
-							for (int i = 0; i < firstPlayer.getTeam().size(); i++) {
-								int xs = (int) firstPlayer.getTeam().get(i).getLocation().getY();
-								int ys = (int) firstPlayer.getTeam().get(i).getLocation().getX();
-								distance = Math.abs(x - xs) + Math.abs(y - ys);
-								if (distance <= range) {
-									teammem = firstPlayer.getTeam().get(i);
-									e.add(teammem);
-								}
-							}
-							a.execute(e);
-						} else {
-							for (int i = 0; i < secondPlayer.getTeam().size(); i++) {
-								int xs = (int) secondPlayer.getTeam().get(i).getLocation().getY();
-								int ys = (int) secondPlayer.getTeam().get(i).getLocation().getX();
-								distance = Math.abs(x - xs) + Math.abs(y - ys);
-								if (distance <= range) {
-									teammem = secondPlayer.getTeam().get(i);
-									e.add(teammem);
-								}
-							}
-							a.execute(e);
-						}
-					}
-				} else if (a instanceof HealingAbility) {
-					if (firstPlayer.getTeam().contains(c)) {
-						for (int i = 0; i < firstPlayer.getTeam().size(); i++) {
-							int xs = (int) firstPlayer.getTeam().get(i).getLocation().getY();
-							int ys = (int) firstPlayer.getTeam().get(i).getLocation().getX();
-							distance = Math.abs(x - xs) + Math.abs(y - ys);
-							if (distance <= range) {
-								teammem = firstPlayer.getTeam().get(i);
-								e.add(teammem);
-							}
-						}
-						a.execute(e);
-					} else {
-						for (int i = 0; i < secondPlayer.getTeam().size(); i++) {
-							int xs = (int) secondPlayer.getTeam().get(i).getLocation().getY();
-							int ys = (int) secondPlayer.getTeam().get(i).getLocation().getX();
-							distance = Math.abs(x - xs) + Math.abs(y - ys);
-							if (distance <= range) {
+							if (flag == false) {
 								teammem = secondPlayer.getTeam().get(i);
 								e.add(teammem);
 							}
 						}
-						a.execute(e);
 					}
-
+					a.execute(e);
 				} else {
-					// Cover C = null;
-					Champion CH = null;
-					if (firstPlayer.getTeam().contains(c)) {
-						for (int i = 0; i < getBoardwidth(); i++) {
-							for (int j = 0; j < getBoardheight(); j++) {
-								if (board[i][j] != null) {
-									// if (board[i][j] instanceof Cover) {//momken tgib errors
-									// C = (Cover) board[i][j];
-									// int xs = (int) C.getLocation().getY();
-									// int ys = (int) C.getLocation().getX();
-									// distance = Math.abs(xs - x) + Math.abs(ys - y);
-									// if (distance <= range)
-									// e.add(C);
-
-									if (board[i][j] instanceof Champion) {
-										CH = (Champion) board[i][j];
-										if (secondPlayer.getTeam().contains(CH)) {
-											int xs = (int) secondPlayer.getTeam().get(i).getLocation().getY();
-											int ys = (int) secondPlayer.getTeam().get(i).getLocation().getX();
-											distance = Math.abs(xs - x) + Math.abs(ys - y);
-											if (distance <= range)
-												e.add(CH);
-										}
-
-									}
+					for (int i = 0; i < firstPlayer.getTeam().size(); i++) {
+						int xs = (int) firstPlayer.getTeam().get(i).getLocation().getY();
+						int ys = (int) firstPlayer.getTeam().get(i).getLocation().getX();
+						distance = Math.abs(x - xs) + Math.abs(y - ys);
+						boolean flag = false;
+						if (distance <= range) {
+							for (int j = 0; j < firstPlayer.getTeam().get(i).getAppliedEffects().size(); j++) {
+								if (firstPlayer.getTeam().get(i).getAppliedEffects().get(j) instanceof Shield) {
+									flag = true;
+									firstPlayer.getTeam().get(i).getAppliedEffects().get(j)
+											.remove(firstPlayer.getTeam().get(i));
+									firstPlayer.getTeam().get(i).getAppliedEffects().remove(j);
 								}
 							}
-						}
-						a.execute(e);
-					} else {
-						for (int i = 0; i < getBoardwidth(); i++) {
-							for (int j = 0; j < getBoardheight(); j++) {
-								if (board[i][j] != null) {
-									// if (board[i][j] instanceof Cover) {//momken tgib errors
-									// C = (Cover) board[i][j];
-									// int xs = (int) C.getLocation().getY();
-									// int ys = (int) C.getLocation().getX();
-									// distance = Math.abs(xs - x) + Math.abs(ys - y);
-									// if (distance <= range)
-									// e.add(C);
-
-									if (board[i][j] instanceof Champion) {
-										CH = (Champion) board[i][j];
-										if (firstPlayer.getTeam().contains(CH)) {
-											int xs = (int) firstPlayer.getTeam().get(i).getLocation().getY();
-											int ys = (int) firstPlayer.getTeam().get(i).getLocation().getX();
-											distance = Math.abs(xs - x) + Math.abs(ys - y);
-											if (distance <= range)
-												e.add(CH);
-										}
-
-									}
-								}
+							if (flag == false) {
+								teammem = firstPlayer.getTeam().get(i);
+								e.add(teammem);
 							}
 						}
-
+						a.execute(e);// ta2riban mara wa7da bas eli tetkatb
 					}
 				}
 			} else {
-				throw new NotEnoughResourcesException();
+				if (firstPlayer.getTeam().contains(c)) {
+					for (int i = 0; i < firstPlayer.getTeam().size(); i++) {
+						int xs = (int) firstPlayer.getTeam().get(i).getLocation().getY();
+						int ys = (int) firstPlayer.getTeam().get(i).getLocation().getX();
+						distance = Math.abs(x - xs) + Math.abs(y - ys);
+						if (distance <= range) {
+							teammem = firstPlayer.getTeam().get(i);
+							e.add(teammem);
+						}
+					}
+					a.execute(e);
+				} else {
+					for (int i = 0; i < secondPlayer.getTeam().size(); i++) {
+						int xs = (int) secondPlayer.getTeam().get(i).getLocation().getY();
+						int ys = (int) secondPlayer.getTeam().get(i).getLocation().getX();
+						distance = Math.abs(x - xs) + Math.abs(y - ys);
+						if (distance <= range) {
+							teammem = secondPlayer.getTeam().get(i);
+							e.add(teammem);
+						}
+					}
+					a.execute(e);
+				}
 			}
-			break;
-		case SELFTARGET:
-			if (a.getRequiredActionPoints() <= c.getCurrentActionPoints() && a.getManaCost() <= c.getMana()) {
-				c.setCurrentActionPoints(c.getCurrentActionPoints() - a.getRequiredActionPoints());
-				c.setMana(c.getMana() - a.getManaCost());
-				e.add(c);
+		} else if (a instanceof HealingAbility) {
+			if (firstPlayer.getTeam().contains(c)) {
+				for (int i = 0; i < firstPlayer.getTeam().size(); i++) {
+					int xs = (int) firstPlayer.getTeam().get(i).getLocation().getY();
+					int ys = (int) firstPlayer.getTeam().get(i).getLocation().getX();
+					distance = Math.abs(x - xs) + Math.abs(y - ys);
+					if (distance <= range) {
+						teammem = firstPlayer.getTeam().get(i);
+						e.add(teammem);
+					}
+				}
 				a.execute(e);
-			} else
-				throw new NotEnoughResourcesException();
-			break;
-		case SURROUND:
-			if (a.getRequiredActionPoints() <= c.getCurrentActionPoints() && a.getManaCost() <= c.getMana()) {
-				c.setCurrentActionPoints(a.getRequiredActionPoints() - c.getCurrentActionPoints());
-				if (a instanceof CrowdControlAbility) {
-					CrowdControlAbility ac = (CrowdControlAbility) a;
-					Champion CH = null;
-					boolean flag = false;
-					// int y = (int) this.getCurrentChampion().getLocation().getX();
-					// int x = (int) this.getCurrentChampion().getLocation().getY();
-					for (int j = y - 1; j < y + 2; j++) {
-						for (int i = x - 1; i < x + 2; i++) {
-							if (i >= 0 && i <= 4 && j >= 0 && j <= 4 && i != x && j != y) {
-								if (board[j][i] instanceof Champion) {
-									CH = (Champion) board[j][i];
-									if (ac.getEffect().getType() == EffectType.DEBUFF) {
-										flag = false;
-										if (firstPlayer.getTeam().contains(c) && secondPlayer.getTeam().contains(CH)) {
-											for (int k = 0; k < secondPlayer.getTeam().get(i).getAppliedEffects()
-													.size(); i++) {
-												if (secondPlayer.getTeam().get(i).getAppliedEffects()
-														.get(k) instanceof Shield) {
-													flag = true;
-													secondPlayer.getTeam().get(i).getAppliedEffects().get(k)
-															.remove(secondPlayer.getTeam().get(i));
-													secondPlayer.getTeam().get(i).getAppliedEffects().remove(k);
-												}
-											}
-											if (flag == false) {
-												teammem = secondPlayer.getTeam().get(i);
-												e.add(teammem);
-											}
-										} else if (firstPlayer.getTeam().contains(CH)
-												&& secondPlayer.getTeam().contains(c)) {
-											for (int k = 0; k < firstPlayer.getTeam().get(i).getAppliedEffects()
-													.size(); i++) {
-												if (firstPlayer.getTeam().get(i).getAppliedEffects()
-														.get(k) instanceof Shield) {
-													flag = true;
-													firstPlayer.getTeam().get(i).getAppliedEffects().get(k)
-															.remove(firstPlayer.getTeam().get(i));
-													firstPlayer.getTeam().get(i).getAppliedEffects().remove(k);
-												}
-											}
-											if (flag == false) {
-												teammem = firstPlayer.getTeam().get(i);
-												e.add(teammem);
-											}
-										}
-									} else {
-										flag = false;
-										if (firstPlayer.getTeam().contains(c) && firstPlayer.getTeam().contains(CH)) {
-											if (flag == false) {
-												teammem = firstPlayer.getTeam().get(i);
-												e.add(teammem);
-											}
-										}
-										if (secondPlayer.getTeam().contains(c) && secondPlayer.getTeam().contains(CH)) {
-											if (flag == false) {
-												teammem = secondPlayer.getTeam().get(i);
-												e.add(teammem);
-											}
-										}
-									}
-									a.execute(e);
+			} else {
+				for (int i = 0; i < secondPlayer.getTeam().size(); i++) {
+					int xs = (int) secondPlayer.getTeam().get(i).getLocation().getY();
+					int ys = (int) secondPlayer.getTeam().get(i).getLocation().getX();
+					distance = Math.abs(x - xs) + Math.abs(y - ys);
+					if (distance <= range) {
+						teammem = secondPlayer.getTeam().get(i);
+						e.add(teammem);
+					}
+				}
+				a.execute(e);
+			}
+
+		} else {
+			// Cover C = null;
+			Champion CH = null;
+			if (firstPlayer.getTeam().contains(c)) {
+				for (int i = 0; i < getBoardwidth(); i++) {
+					for (int j = 0; j < getBoardheight(); j++) {
+						if (board[i][j] != null) {
+							// if (board[i][j] instanceof Cover) {//momken tgib errors
+							// C = (Cover) board[i][j];
+							// int xs = (int) C.getLocation().getY();
+							// int ys = (int) C.getLocation().getX();
+							// distance = Math.abs(xs - x) + Math.abs(ys - y);
+							// if (distance <= range)
+							// e.add(C);
+
+							if (board[i][j] instanceof Champion) {
+								CH = (Champion) board[i][j];
+								if (secondPlayer.getTeam().contains(CH)) {
+									int xs = (int) secondPlayer.getTeam().get(i).getLocation().getY();
+									int ys = (int) secondPlayer.getTeam().get(i).getLocation().getX();
+									distance = Math.abs(xs - x) + Math.abs(ys - y);
+									if (distance <= range)
+										e.add(CH);
 								}
 
 							}
 						}
 					}
-				} else if (a instanceof HealingAbility) {
-					Champion CH = null;
-					for (int j = y - 1; j < y + 2; j++) {
-						for (int i = x - 1; i < x + 2; i++) {
-							if (i >= 0 && i <= 4 && j >= 0 && j <= 4 && i != x && j != y) {
-								if (board[j][i] instanceof Champion) {
-									CH = (Champion) board[j][i];
-									if (secondPlayer.getTeam().contains(c) && secondPlayer.getTeam().contains(CH)) {
+				}
+				a.execute(e);
+			} else {
+				for (int i = 0; i < getBoardwidth(); i++) {
+					for (int j = 0; j < getBoardheight(); j++) {
+						if (board[i][j] != null) {
+							// if (board[i][j] instanceof Cover) {//momken tgib errors
+							// C = (Cover) board[i][j];
+							// int xs = (int) C.getLocation().getY();
+							// int ys = (int) C.getLocation().getX();
+							// distance = Math.abs(xs - x) + Math.abs(ys - y);
+							// if (distance <= range)
+							// e.add(C);
+
+							if (board[i][j] instanceof Champion) {
+								CH = (Champion) board[i][j];
+								if (firstPlayer.getTeam().contains(CH)) {
+									int xs = (int) firstPlayer.getTeam().get(i).getLocation().getY();
+									int ys = (int) firstPlayer.getTeam().get(i).getLocation().getX();
+									distance = Math.abs(xs - x) + Math.abs(ys - y);
+									if (distance <= range)
+										e.add(CH);
+								}
+
+							}
+						}
+					}
+				}
+
+			}
+		}
+	} else {
+		throw new NotEnoughResourcesException();
+	}
+	break;
+case SELFTARGET:
+	if (a.getRequiredActionPoints() <= c.getCurrentActionPoints() && a.getManaCost() <= c.getMana()) {
+		c.setCurrentActionPoints(c.getCurrentActionPoints() - a.getRequiredActionPoints());
+		c.setMana(c.getMana() - a.getManaCost());
+		e.add(c);
+		a.execute(e);
+	} else
+		throw new NotEnoughResourcesException();
+	break;
+case SURROUND:
+	if (a.getRequiredActionPoints() <= c.getCurrentActionPoints() && a.getManaCost() <= c.getMana()) {
+		c.setCurrentActionPoints(a.getRequiredActionPoints() - c.getCurrentActionPoints());
+		if (a instanceof CrowdControlAbility) {
+			CrowdControlAbility ac = (CrowdControlAbility) a;
+			Champion CH = null;
+			boolean flag = false;
+			// int y = (int) this.getCurrentChampion().getLocation().getX();
+			// int x = (int) this.getCurrentChampion().getLocation().getY();
+			for (int j = y - 1; j < y + 2; j++) {
+				for (int i = x - 1; i < x + 2; i++) {
+					if (i >= 0 && i <= 4 && j >= 0 && j <= 4 && i != x && j != y) {
+						if (board[j][i] instanceof Champion) {
+							CH = (Champion) board[j][i];
+							if (ac.getEffect().getType() == EffectType.DEBUFF) {
+								flag = false;
+								if (firstPlayer.getTeam().contains(c) && secondPlayer.getTeam().contains(CH)) {
+									for (int k = 0; k < secondPlayer.getTeam().get(i).getAppliedEffects()
+											.size(); i++) {
+										if (secondPlayer.getTeam().get(i).getAppliedEffects()
+												.get(k) instanceof Shield) {
+											flag = true;
+											secondPlayer.getTeam().get(i).getAppliedEffects().get(k)
+													.remove(secondPlayer.getTeam().get(i));
+											secondPlayer.getTeam().get(i).getAppliedEffects().remove(k);
+										}
+									}
+									if (flag == false) {
 										teammem = secondPlayer.getTeam().get(i);
 										e.add(teammem);
-									} else if (firstPlayer.getTeam().contains(c)
-											&& firstPlayer.getTeam().contains(CH)) {
+									}
+								} else if (firstPlayer.getTeam().contains(CH)
+										&& secondPlayer.getTeam().contains(c)) {
+									for (int k = 0; k < firstPlayer.getTeam().get(i).getAppliedEffects()
+											.size(); i++) {
+										if (firstPlayer.getTeam().get(i).getAppliedEffects()
+												.get(k) instanceof Shield) {
+											flag = true;
+											firstPlayer.getTeam().get(i).getAppliedEffects().get(k)
+													.remove(firstPlayer.getTeam().get(i));
+											firstPlayer.getTeam().get(i).getAppliedEffects().remove(k);
+										}
+									}
+									if (flag == false) {
 										teammem = firstPlayer.getTeam().get(i);
 										e.add(teammem);
 									}
 								}
+							} else {
+								flag = false;
+								if (firstPlayer.getTeam().contains(c) && firstPlayer.getTeam().contains(CH)) {
+									if (flag == false) {
+										teammem = firstPlayer.getTeam().get(i);
+										e.add(teammem);
+									}
+								}
+								if (secondPlayer.getTeam().contains(c) && secondPlayer.getTeam().contains(CH)) {
+									if (flag == false) {
+										teammem = secondPlayer.getTeam().get(i);
+										e.add(teammem);
+									}
+								}
+							}
+							a.execute(e);
+						}
+
+					}
+				}
+			}
+		} else if (a instanceof HealingAbility) {
+			Champion CH = null;
+			for (int j = y - 1; j < y + 2; j++) {
+				for (int i = x - 1; i < x + 2; i++) {
+					if (i >= 0 && i <= 4 && j >= 0 && j <= 4 && i != x && j != y) {
+						if (board[j][i] instanceof Champion) {
+							CH = (Champion) board[j][i];
+							if (secondPlayer.getTeam().contains(c) && secondPlayer.getTeam().contains(CH)) {
+								teammem = secondPlayer.getTeam().get(i);
+								e.add(teammem);
+							} else if (firstPlayer.getTeam().contains(c)
+									&& firstPlayer.getTeam().contains(CH)) {
+								teammem = firstPlayer.getTeam().get(i);
+								e.add(teammem);
 							}
 						}
 					}
-				} else {
-					Champion CH = null;
-					Cover C = null;
-					boolean flag = false;
-					for (int j = y - 1; j < y + 2; j++) {
-						for (int i = x - 1; i < x + 2; i++) {
-							if (i >= 0 && i <= 4 && j >= 0 && j <= 4 && i != x && j != y) {
-								if (board[j][i] instanceof Champion) {
-									CH = (Champion) board[j][i];
-									flag = false;
-									if (firstPlayer.getTeam().contains(c) && secondPlayer.getTeam().contains(CH)) {
-										for (int k = 0; k < secondPlayer.getTeam().get(i).getAppliedEffects()
-												.size(); i++) {
-											if (secondPlayer.getTeam().get(i).getAppliedEffects()
-													.get(k) instanceof Shield) {
-												flag = true;
-												secondPlayer.getTeam().get(i).getAppliedEffects().get(k)
-														.remove(secondPlayer.getTeam().get(i));
-												secondPlayer.getTeam().get(i).getAppliedEffects().remove(k);
-											}
-										}
-										if (flag == false) {
-											teammem = secondPlayer.getTeam().get(i);
-											e.add(teammem);
-										}
-
-									} else if (firstPlayer.getTeam().contains(CH)
-											&& secondPlayer.getTeam().contains(c)) {
-										for (int k = 0; k < firstPlayer.getTeam().get(i).getAppliedEffects()
-												.size(); i++) {
-											if (firstPlayer.getTeam().get(i).getAppliedEffects()
-													.get(k) instanceof Shield) {
-												flag = true;
-												firstPlayer.getTeam().get(i).getAppliedEffects().get(k)
-														.remove(firstPlayer.getTeam().get(i));
-												firstPlayer.getTeam().get(i).getAppliedEffects().remove(k);
-											}
-										}
-										if (flag == false) {
-											teammem = firstPlayer.getTeam().get(i);
-											e.add(teammem);
-										}
+				}
+			}
+		} else {
+			Champion CH = null;
+			Cover C = null;
+			boolean flag = false;
+			for (int j = y - 1; j < y + 2; j++) {
+				for (int i = x - 1; i < x + 2; i++) {
+					if (i >= 0 && i <= 4 && j >= 0 && j <= 4 && i != x && j != y) {
+						if (board[j][i] instanceof Champion) {
+							CH = (Champion) board[j][i];
+							flag = false;
+							if (firstPlayer.getTeam().contains(c) && secondPlayer.getTeam().contains(CH)) {
+								for (int k = 0; k < secondPlayer.getTeam().get(i).getAppliedEffects()
+										.size(); i++) {
+									if (secondPlayer.getTeam().get(i).getAppliedEffects()
+											.get(k) instanceof Shield) {
+										flag = true;
+										secondPlayer.getTeam().get(i).getAppliedEffects().get(k)
+												.remove(secondPlayer.getTeam().get(i));
+										secondPlayer.getTeam().get(i).getAppliedEffects().remove(k);
 									}
-
-								} else if (board[j][i] instanceof Cover) {
-									C = (Cover) board[j][i];
-									e.add(C);
 								}
+								if (flag == false) {
+									teammem = secondPlayer.getTeam().get(i);
+									e.add(teammem);
+								}
+
+							} else if (firstPlayer.getTeam().contains(CH)
+									&& secondPlayer.getTeam().contains(c)) {
+								for (int k = 0; k < firstPlayer.getTeam().get(i).getAppliedEffects()
+										.size(); i++) {
+									if (firstPlayer.getTeam().get(i).getAppliedEffects()
+											.get(k) instanceof Shield) {
+										flag = true;
+										firstPlayer.getTeam().get(i).getAppliedEffects().get(k)
+												.remove(firstPlayer.getTeam().get(i));
+										firstPlayer.getTeam().get(i).getAppliedEffects().remove(k);
+									}
+								}
+								if (flag == false) {
+									teammem = firstPlayer.getTeam().get(i);
+									e.add(teammem);
+								}
+							}
+
+						} else if (board[j][i] instanceof Cover) {
+							C = (Cover) board[j][i];
+							e.add(C);
+						}
+						a.execute(e);
+					}
+				}
+			}
+		}
+	} else
+		throw new NotEnoughResourcesException();
+	break;
+}
+
+}
+
+
+public void castAbility(Ability a, int x, int y) throws NotEnoughResourcesException, CloneNotSupportedException, InvalidTargetException, AbilityUseException {
+Champion c = this.getCurrentChampion();
+Champion teammem = null;
+ArrayList<Damageable> e = new ArrayList<Damageable>();
+Cover cov=null;
+int range = a.getCastRange();
+int y1 = (int) c.getLocation().getX();
+int x1 = (int) c.getLocation().getY();
+int distance = 0;
+boolean flag= false;
+if(a.getManaCost() > c.getMana()) {
+	throw new AbilityUseException();
+}
+for (int j = 0; j < c.getAppliedEffects().size(); j++) {
+	if (c.getAppliedEffects().get(j) instanceof Silence) {
+		throw new AbilityUseException();
+	}}
+if(a.getCastArea()== AreaOfEffect.DIRECTIONAL ||a.getCastArea()== AreaOfEffect.SELFTARGET||a.getCastArea()== AreaOfEffect.SURROUND||a.getCastArea()== AreaOfEffect.TEAMTARGET) {
+	throw new AbilityUseException();
+}
+if (a.getRequiredActionPoints() > c.getCurrentActionPoints() && a.getManaCost() > c.getMana()) {
+	throw new NotEnoughResourcesException();
+} else {
+	distance = Math.abs(x - x1) + Math.abs(y - y1);
+	if (a instanceof CrowdControlAbility) {
+		CrowdControlAbility ac = (CrowdControlAbility) a;
+		
+		if (ac.getEffect().getType() == EffectType.DEBUFF) {
+			if (board[x][y] instanceof Champion) {
+				Champion checkchamp = (Champion) board[x][y];
+				if (firstPlayer.getTeam().contains(c)) {
+
+					if (secondPlayer.getTeam().contains(checkchamp)) {
+						if (distance <= range) {
+							for(int i=0;i<checkchamp.getAppliedEffects()
+										.size(); i++) {
+							if(checkchamp.getAppliedEffects()
+											.get(i) instanceof Shield) {
+								flag =true;
+								checkchamp.getAppliedEffects().get(i)
+								.remove(checkchamp);
+								checkchamp.getAppliedEffects().remove(i);
+							}
+							}
+							if (flag == false) {
+								e.add(checkchamp);
+							}
+							
+							a.execute(e);
+						}
+
+					}
+				} else {
+					if (secondPlayer.getTeam().contains(checkchamp)) {
+						if (distance <= range) {
+							for(int i=0;i<checkchamp.getAppliedEffects()
+									.size(); i++) {
+						if(checkchamp.getAppliedEffects()
+										.get(i) instanceof Shield) {
+							flag =true;
+							checkchamp.getAppliedEffects().get(i)
+							.remove(checkchamp);
+							checkchamp.getAppliedEffects().remove(i);
+						}
+						}
+							e.add(checkchamp);
+							a.execute(e);
+						}
+					}
+				}
+			}
+			else throw new InvalidTargetException();
+		}
+		else {
+			if (ac.getEffect().getType() == EffectType.BUFF) 
+				    {
+
+				if (board[x][y] instanceof Champion) {
+					Champion checkchamp = (Champion) board[x][y];
+					if (firstPlayer.getTeam().contains(c)) {
+
+						if (firstPlayer.getTeam().contains(checkchamp)) {
+							if (distance <= range) {
+								e.add(checkchamp);
+								a.execute(e);
+							}
+
+						}
+					} else {
+						if (secondPlayer.getTeam().contains(checkchamp)) {
+							if (distance <= range) {
+								e.add(checkchamp);
 								a.execute(e);
 							}
 						}
 					}
 				}
-			} else
-				throw new NotEnoughResourcesException();
-			break;
-		}
+				else throw new InvalidTargetException();
+			
+				}
+			}
+	} else if(a instanceof HealingAbility) {
+		distance = Math.abs(x - x1) + Math.abs(y - y1);
+				if (board[x][y] instanceof Champion) {
+					Champion checkchamp = (Champion) board[x][y];
+					if (firstPlayer.getTeam().contains(c)) {
 
+						if (firstPlayer.getTeam().contains(checkchamp)) {
+							if (distance <= range) {
+								e.add(checkchamp);
+								a.execute(e);
+							}
+
+						}
+					} else {
+						if (secondPlayer.getTeam().contains(checkchamp)) {
+							if (distance <= range) {
+								e.add(checkchamp);
+								a.execute(e);
+							}
+						}
+					}
+				}
+				else throw new InvalidTargetException();
+			
+				
+			
 	}
+	else {
+	if (board[x][y] instanceof Champion) {
+		Champion checkchamp = (Champion) board[x][y];
+		if (firstPlayer.getTeam().contains(c)) {
 
+			if (firstPlayer.getTeam().contains(checkchamp)) {
+				if (distance <= range) {
+					e.add(checkchamp);
+					a.execute(e);
+				}
+
+			}
+		} else {
+			if (secondPlayer.getTeam().contains(checkchamp)) {
+				if (distance <= range) {
+					e.add(checkchamp);
+					a.execute(e);
+				}
+			}
+		}
+	}
+	else if(board[x][y] instanceof Cover) {
+		cov=(Cover) board[x][y];
+		if (distance <= range) {
+			e.add(cov);
+			a.execute(e);
+		}
+	}
+	else throw new InvalidTargetException();
+		
+	
+	}
+}
+
+}
+
+	
 	public void castAbility(Ability a, Direction d) throws CloneNotSupportedException {
 		Champion currentchamp = this.getCurrentChampion();
 		int Xposition = (int) currentchamp.getLocation().getX();// revise
