@@ -676,12 +676,25 @@ if (a.getRequiredActionPoints() > c.getCurrentActionPoints() && a.getManaCost() 
 }
 
 	
-	public void castAbility(Ability a, Direction d) throws CloneNotSupportedException {
+	public void castAbility(Ability a, Direction d) throws CloneNotSupportedException, AbilityUseException, NotEnoughResourcesException {
 		Champion currentchamp = this.getCurrentChampion();
 		int Xposition = (int) currentchamp.getLocation().getX();// revise
 		int Yposition = (int) currentchamp.getLocation().getY();// revise
 		int range = a.getCastRange();
 		ArrayList<Damageable> e = new ArrayList<Damageable>();
+		if(a.getManaCost() > currentchamp.getMana()) {
+			throw new AbilityUseException();
+		}
+		for (int j = 0; j < currentchamp.getAppliedEffects().size(); j++) {
+			if (currentchamp.getAppliedEffects().get(j) instanceof Silence) {
+				throw new AbilityUseException();
+			}}
+		if(a.getCastArea()== AreaOfEffect.SINGLETARGET ||a.getCastArea()== AreaOfEffect.SELFTARGET||a.getCastArea()== AreaOfEffect.SURROUND||a.getCastArea()== AreaOfEffect.TEAMTARGET) {
+			throw new AbilityUseException();
+		}
+		if (a.getRequiredActionPoints() > currentchamp.getCurrentActionPoints() && a.getManaCost() > currentchamp.getMana()) {
+			throw new NotEnoughResourcesException();
+		}
 
 		switch (d) {
 		case UP: {
