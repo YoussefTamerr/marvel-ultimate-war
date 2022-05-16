@@ -26,6 +26,7 @@ public class Hero extends Champion {
 			}
 			Effect e = new Embrace(2);
 			targets.get(i).getAppliedEffects().add(e);
+			e.apply(targets.get(i));
 		}
 	}
 

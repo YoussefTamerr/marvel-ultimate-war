@@ -17,13 +17,15 @@ public class Stun extends Effect{
 	@Override
 	public void remove(Champion c) { /// active ?????
 		c.setCondition(Condition.ACTIVE);
-		for(int i = c.getAppliedEffects().size()-1;i>=0;i++) {
+		for(int i = 0;i < c.getAppliedEffects().size();i++) {
 			if(c.getAppliedEffects().get(i) instanceof Stun) {
 				c.setCondition(Condition.INACTIVE);
 				break;
 			}
 			else if(c.getAppliedEffects().get(i) instanceof Root) {
-				c.setCondition(Condition.ROOTED);
+				if(c.getCondition() != Condition.INACTIVE) {
+					c.setCondition(Condition.ROOTED);
+				}
 				break;
 			}
 			
