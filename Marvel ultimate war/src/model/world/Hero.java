@@ -16,10 +16,11 @@ public class Hero extends Champion {
 	public void useLeaderAbility(ArrayList<Champion> targets) {
 		for(int i = 0; i< targets.size(); i++)
 		{
-			for(int j =0; j< targets.get(i).getAppliedEffects().size();i++)
+			for(int j =0; j< targets.get(i).getAppliedEffects().size();j++)
 			{
 				if(targets.get(i).getAppliedEffects().get(j).getType() == EffectType.DEBUFF)
 				{
+					targets.get(i).getAppliedEffects().get(j).remove(targets.get(i));
 					targets.get(i).getAppliedEffects().remove(j);
 				}
 			}
