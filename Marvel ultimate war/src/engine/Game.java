@@ -273,9 +273,9 @@ public class Game {
 				if (attackedCH.getCurrentHP() == 0) {
 					attackedCH.setCondition(Condition.KNOCKEDOUT);
 					board[newHeight][newWidth] = null;
-					//removeFromTeam(attackedCH);
+					removeFromTeam(attackedCH);
 					
-					Stack<Champion> temp = new Stack<Champion>();
+					/*Stack<Champion> temp = new Stack<Champion>();
 					while (!turnOrder.isEmpty()) {
 						if ((Champion) turnOrder.peekMin() != attackedCH) {
 							temp.add((Champion) turnOrder.remove());
@@ -291,7 +291,7 @@ public class Game {
 						firstPlayer.getTeam().remove(attackedCH);
 					}
 					else 
-						secondPlayer.getTeam().remove(attackedCH);
+						secondPlayer.getTeam().remove(attackedCH);*/
 					
 				}
 					
@@ -609,6 +609,23 @@ public class Game {
 						board[t.getLocation().x][t.getLocation().y] = null;
 						t.setCondition(Condition.KNOCKEDOUT);
 						removeFromTeam(t);
+						/*Stack<Champion> temp = new Stack<Champion>();
+						while (!turnOrder.isEmpty()) {
+							if ((Champion) turnOrder.peekMin() != t) {
+								temp.add((Champion) turnOrder.remove());
+								
+							} else {
+								turnOrder.remove();
+							}
+						}
+						while (!temp.isEmpty()) {
+							turnOrder.insert(temp.pop());
+						}
+						if(firstPlayer.getTeam().contains(t)) {
+							firstPlayer.getTeam().remove(t);
+						}
+						else 
+							secondPlayer.getTeam().remove(t);*/
 					}
 				}
 			}
@@ -1432,7 +1449,7 @@ public class Game {
 	}
 
 	public void removeFromTeam(Champion t) {
-		Stack<Champion> temp = new Stack<Champion>();
+		/*Stack<Champion> temp = new Stack<Champion>();
 		while (!turnOrder.isEmpty()) {
 			if ((Champion) turnOrder.peekMin() != t) {
 				temp.add((Champion) turnOrder.remove());
@@ -1443,7 +1460,7 @@ public class Game {
 		}
 		while (!temp.isEmpty()) {
 			turnOrder.insert(temp.pop());
-		}
+		}*/
 		
 		/*Stack<Comparable> temp = new Stack<Comparable>();
 		for (int i = 0; i < turnOrder.size(); i++) {
@@ -1456,7 +1473,7 @@ public class Game {
 			turnOrder.insert(temp.pop());
 		}*/
 		
-		if (this.getFirstPlayer().getTeam().contains(t)) {
+		/*if (this.getFirstPlayer().getTeam().contains(t)) {
 			for (Champion c : this.getFirstPlayer().getTeam()) {
 				if (c == t) {
 					this.getFirstPlayer().getTeam().remove(t);
@@ -1467,8 +1484,26 @@ public class Game {
 				if (c == t) {
 					this.getSecondPlayer().getTeam().remove(t);
 				}
+			}*/
+			
+			Stack<Champion> temp = new Stack<Champion>();
+			while (!turnOrder.isEmpty()) {
+				if ((Champion) turnOrder.peekMin() != t) {
+					temp.add((Champion) turnOrder.remove());
+					
+				} else {
+					turnOrder.remove();
+				}
 			}
-		}
+			while (!temp.isEmpty()) 
+				turnOrder.insert(temp.pop());
+			
+			if(firstPlayer.getTeam().contains(t)) {
+				firstPlayer.getTeam().remove(t);
+			}
+			else 
+				secondPlayer.getTeam().remove(t);
+		
 
 		
 		
