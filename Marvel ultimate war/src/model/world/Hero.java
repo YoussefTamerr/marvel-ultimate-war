@@ -13,6 +13,7 @@ public class Hero extends Champion {
 
 	}
 
+	@Override
 	public void useLeaderAbility(ArrayList<Champion> targets) {
 		for(int i = 0; i< targets.size(); i++)
 		{
@@ -22,12 +23,13 @@ public class Hero extends Champion {
 				{
 					targets.get(i).getAppliedEffects().get(j).remove(targets.get(i));
 					targets.get(i).getAppliedEffects().remove(j);
+					j=j-1;
 				}
 			}
 			Effect e = new Embrace(2);
 			targets.get(i).getAppliedEffects().add(e);
 			e.apply(targets.get(i));
-		}
+		}		
 	}
 
 	
