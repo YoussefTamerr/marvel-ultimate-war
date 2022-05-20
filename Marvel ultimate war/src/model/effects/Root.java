@@ -18,18 +18,63 @@ public class Root extends Effect{
 
 	@Override
 	public void remove(Champion c) {
-		for(int i = c.getAppliedEffects().size()-1; i>=0 ; i--)
+		boolean first = false;
+		for(int i = 0; i < c.getAppliedEffects().size() ; i++)
 		{
 			if(c.getAppliedEffects().get(i) instanceof Stun) {
 				c.setCondition(Condition.INACTIVE);
 			}
 			else if (c.getAppliedEffects().get(i) instanceof Root) {
-				c.setCondition(Condition.ROOTED);
+				if(first) {
+					if(c.getCondition() != Condition.INACTIVE)
+						c.setCondition(Condition.ROOTED);
+				}
+				else 
+					first = true;
 			}
 			else {
-				c.setCondition(Condition.ACTIVE);
+				if(c.getCondition() != Condition.INACTIVE || c.getCondition() != Condition.ROOTED)
+					c.setCondition(Condition.ACTIVE);
 			}
 		}
+		
+		
+		//boolean first = false;
+		/*boolean s = false;
+		boolean r = false;
+		for(int i = 0;i < c.getAppliedEffects().size();i++) {
+			if(c.getAppliedEffects().get(i) instanceof Stun) {
+				s = true;
+				c.setCondition(Condition.INACTIVE);
+				//break;
+			}
+			else if(c.getAppliedEffects().get(i) instanceof Root) {
+				if(c.getCondition() != Condition.INACTIVE) {
+					r = true;
+					c.setCondition(Condition.ROOTED);
+				}
+				//break;
+			}	
+		}
+		if(!s && !r) {
+			c.setCondition(Condition.ACTIVE);
+		}*/
+		
+		/*c.setCondition(Condition.ACTIVE);
+		for(int i = 0;i < c.getAppliedEffects().size();i++) {
+			if(c.getAppliedEffects().get(i) instanceof Stun) {
+				c.setCondition(Condition.INACTIVE);
+				break;
+			}
+			else if(c.getAppliedEffects().get(i) instanceof Root) {
+				if(c.getCondition() != Condition.INACTIVE) {
+					c.setCondition(Condition.ROOTED);
+				}
+				break;
+			}
+			
+		}*/
+		
 		
 	}
 }

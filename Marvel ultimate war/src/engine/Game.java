@@ -161,21 +161,40 @@ public class Game {
 		for (int i = 1; i <= range; i++) {
 			if (d == Direction.UP) {
 				if (height + i <= 4 && board[height + i][width] != null) {
-					return (Damageable) board[height + i][width];
+					if(board[height + i][width] instanceof Champion) {
+						if(!checkTeammate(this.getCurrentChampion(),(Champion) board[height + i][width]))
+							return (Damageable) board[height + i][width];
+					}
+					else 
+						return (Damageable) board[height + i][width];
 				}
 			} else if (d == Direction.DOWN) {
 				if (height - i >= 0 && board[height - i][width] != null) {
-					return (Damageable) board[height - i][width];
+					if(board[height - i][width] instanceof Champion) {
+						if(!checkTeammate(this.getCurrentChampion(),(Champion) board[height - i][width]))
+							return (Damageable) board[height - i][width];
+					}
+					else 
+						return (Damageable) board[height - i][width];
 				}
 			} else if (d == Direction.RIGHT) {
 				if ((width + i) <= 4 && board[height][width + i] != null) {
 
-					return (Damageable) board[height][width + i];
+					if(board[height][width + i] instanceof Champion) {
+						if(!checkTeammate(this.getCurrentChampion(),(Champion) board[height][width + i]))
+							return (Damageable) board[height][width + i];
+					}
+					else 
+						return (Damageable) board[height][width + i];
 				}
 			} else {
 				if (width - i >= 0 && board[height][width - i] != null) {
-
-					return (Damageable) board[height][width - i];
+					if(board[height][width - i] instanceof Champion) {
+						if(!checkTeammate(this.getCurrentChampion(),(Champion) board[height][width - i]))
+							return (Damageable) board[height][width - i];
+					}
+					else 
+						return (Damageable) board[height][width - i];
 				}
 			}
 
@@ -274,7 +293,7 @@ public class Game {
 					attackedCH.setCondition(Condition.KNOCKEDOUT);
 					board[newHeight][newWidth] = null;
 					removeFromTeam(attackedCH);
-					
+				}	
 					/*Stack<Champion> temp = new Stack<Champion>();
 					while (!turnOrder.isEmpty()) {
 						if ((Champion) turnOrder.peekMin() != attackedCH) {
@@ -293,7 +312,7 @@ public class Game {
 					else 
 						secondPlayer.getTeam().remove(attackedCH);*/
 					
-				}
+				
 					
 					/*Stack<Comparable> temp = new Stack<Comparable>();
 					for (int i = 0; i < turnOrder.size(); i++) {
@@ -1334,9 +1353,9 @@ public class Game {
 		if (a.getCurrentCooldown() != 0) {
 			throw new AbilityUseException();
 		}
-//		if (x > 4 || x < 0 || y > 4 || y < 0) {
-//			throw new InvalidTargetException();
-//		}
+		if (x > 4 || x < 0 || y > 4 || y < 0) {
+			throw new InvalidTargetException();
+		}
 		if (board[x][y] == null) {
 			throw new InvalidTargetException();
 		}
@@ -1363,6 +1382,9 @@ public class Game {
 			} else {
 				boolean isShield = false;
 				Champion v = (Champion) board[x][y];
+				if(c == v) {
+					throw new InvalidTargetException();
+				}
 				if (checkTeammate(c, v)) {
 					throw new InvalidTargetException();
 				} else {
@@ -1401,11 +1423,16 @@ public class Game {
 				throw new InvalidTargetException();
 			} else {
 				Champion v = (Champion) board[x][y];
-				if (!checkTeammate(c, v)) {
-					throw new InvalidTargetException();
-				} else {
+				if(c == v) 
 					targets.add(v);
-
+				else {
+					if (!checkTeammate(c, v)) {
+						throw new InvalidTargetException();
+					} else {
+						
+						targets.add(v);
+	
+					}
 				}
 				a.execute(targets);
 				removeCosts(c, a);
@@ -1634,6 +1661,8 @@ public class Game {
 				c.getAbilities().get(i).setCurrentCooldown(c.getAbilities().get(i).getCurrentCooldown() - 1); //// revise
 			}
 			turnOrder.remove();
+			if(turnOrder.isEmpty()) 
+				this.prepareChampionTurns();
 			c = (Champion) turnOrder.peekMin();
 		}
 		c.setCurrentActionPoints(c.getMaxActionPointsPerTurn());
