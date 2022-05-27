@@ -11,11 +11,12 @@ public class Villain extends Champion {
 
 	@Override
 	public void useLeaderAbility(ArrayList<Champion> targets) {
-		for(int i=0;i<targets.size();i++) {
-			targets.get(i).setCondition(Condition.KNOCKEDOUT);
+		for (Champion c : targets) {
+
+			c.setCurrentHP(0);
+
 		}
+
 	}
+
 }
-
-	
-

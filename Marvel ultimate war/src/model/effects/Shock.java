@@ -2,46 +2,39 @@ package model.effects;
 
 import model.world.Champion;
 
-public class Shock extends Effect{
+public class Shock extends Effect {
+
 	public Shock(int duration) {
-		super("Shock",duration,EffectType.DEBUFF);
+		super("Shock", duration, EffectType.DEBUFF);
+		
 	}
 
 	@Override
 	public void apply(Champion c) {
-		int s = c.getSpeed();
-		s -= s*0.1;
-		c.setSpeed(s);
+		c.setSpeed((int) (c.getSpeed()*0.9));
+		c.setAttackDamage((int) (c.getAttackDamage()*0.9));
+		c.setCurrentActionPoints(c.getCurrentActionPoints()-1);
+		c.setMaxActionPointsPerTurn(c.getMaxActionPointsPerTurn()-1);
 		
-		int d = c.getAttackDamage();
-		d -= d*0.1;
-		c.setAttackDamage(d);
 		
-		int m = c.getMaxActionPointsPerTurn();
-		m-=1;
-		int curr = c.getCurrentActionPoints();
-		curr-=1;
-		c.setMaxActionPointsPerTurn(m);
-		c.setCurrentActionPoints(curr);
+		
+		
+		
 		
 	}
 
 	@Override
-	public void remove(Champion c) {  ///// revise the remove of attack damage and speed math issue
-		double s = c.getSpeed();
-		s = s/0.9;
-		c.setSpeed((int)s);
+	public void remove(Champion c) {
+		c.setSpeed((int) (c.getSpeed()/0.9));
+		c.setAttackDamage((int) (c.getAttackDamage()/0.9));
+		c.setCurrentActionPoints(c.getCurrentActionPoints()+1);
+		c.setMaxActionPointsPerTurn(c.getMaxActionPointsPerTurn()+1);
 		
-		double d = c.getAttackDamage();
-		d = d / 0.9;
-		c.setAttackDamage((int) d);
 		
-		int m = c.getMaxActionPointsPerTurn();
-		m+=1;
-		int curr = c.getCurrentActionPoints();
-		curr+=1;
-		c.setMaxActionPointsPerTurn(m);
-		c.setCurrentActionPoints(curr);
+		
+		
+		
 		
 	}
+
 }

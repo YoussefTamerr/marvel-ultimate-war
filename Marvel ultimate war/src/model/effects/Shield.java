@@ -8,29 +8,17 @@ public class Shield extends Effect {
 		super("Shield", duration, EffectType.BUFF);
 		
 	}
-	
-
 
 	@Override
-	public void apply(Champion c) { // set duration to 0 to eliminate effect (point 3)
-		int s = c.getSpeed();
-		s += s*0.02;
-		c.setSpeed(s);
+	public void apply(Champion c) {
 		
-		
-		
-		
-		
+		c.setSpeed((int) (c.getSpeed()*1.02));
 	}
 
 	@Override
-	public void remove(Champion c) { 
-		int s = c.getSpeed();
-		s = (int)(s/1.02);
-		c.setSpeed(s);
+	public void remove(Champion c) {
 		
-		
-		
+		c.setSpeed((int) (c.getSpeed()/1.02));
 	}
 
 }
