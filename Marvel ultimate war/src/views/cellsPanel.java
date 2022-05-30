@@ -15,15 +15,20 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 public class cellsPanel extends JPanel {
+	
+	Cell[][] buttonGrid = new Cell[5][5];
 
 	public cellsPanel() {
 		this.setPreferredSize(new Dimension(600, this.getHeight()));
 		this.setLayout(new GridLayout(5,5));
 		for(int i = 0; i<5; i++) {
 			for(int j = 0; j<5; j++) {
-				JButton b = new JButton();
 				
-				try {
+				Cell b = new Cell();
+				
+				//JButton b = new JButton();
+				
+				/*try {
 					Image img = ImageIO.read(getClass().getClassLoader().getResource(
 							"views/acids/vegeta.png"));
 					b.setIcon((new ImageIcon(img)));
@@ -33,10 +38,18 @@ public class cellsPanel extends JPanel {
 				
 				b.setText("hi");
 				b.setVerticalTextPosition(AbstractButton.TOP);
-				//b.setBackground(Color.WHITE);
+				//b.setBackground(Color.WHITE);*/
+				buttonGrid[i][j] = b;
 				this.add(b);
+				
 			}
 		}
 	}
+
+	public Cell[][] getButtonGrid() {
+		return buttonGrid;
+	}
+	
+	
 	
 }

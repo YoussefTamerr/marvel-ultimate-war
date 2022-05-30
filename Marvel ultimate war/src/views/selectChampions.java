@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.UIManager;
 
 import model.world.Champion;
 
@@ -29,6 +30,7 @@ public class selectChampions extends JFrame {
 		this.add(panel, BorderLayout.CENTER);
 
 		info = new JTextArea();
+		info.setFont(info.getFont().deriveFont(15f));
 		info.setPreferredSize(new Dimension(400, this.getHeight()));
 		info.setEditable(false);
 

@@ -28,6 +28,7 @@ public class board extends JFrame {
 		info = new JTextArea();
 		info.setPreferredSize(new Dimension(400, this.getHeight()));
 		info.setEditable(false);
+		info.setFont(info.getFont().deriveFont(15f));
 
 		this.add(info, BorderLayout.EAST);
 
@@ -35,6 +36,20 @@ public class board extends JFrame {
 		this.repaint();
 
 	}
+	
+	
+
+	public cellsPanel getCellsPanel() {
+		return CellsPanel;
+	}
+
+
+
+	public JTextArea getInfo() {
+		return info;
+	}
+
+
 
 	public static void main(String[] args) {
 		new board();
